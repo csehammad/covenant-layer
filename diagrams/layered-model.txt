@@ -1,0 +1,16 @@
++-----------------------------------------------------------+
+| Layer 5: user intent                                      |
+| goals, preferences, budget, constraints, approval rules   |
++-----------------------------------------------------------+
+| Layer 4: coordination                                     |
+| objectives, offers, acceptances, commitments              |
++-----------------------------------------------------------+
+| Layer 3: trust                                            |
+| authority, identity, evidence, receipts, disputes         |
++-----------------------------------------------------------+
+| Layer 2: fulfillment                                      |
+| provider execution, booking, payment, issuance            |
++-----------------------------------------------------------+
+| Layer 1: infrastructure                                   |
+| HTTP, queues, logs, internal APIs                         |
++-----------------------------------------------------------+

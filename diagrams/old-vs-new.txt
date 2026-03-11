@@ -1,0 +1,41 @@
+OLD WORLD
+
+User goal
+   |
+   v
+Agent
+   |
+   +--> tool calls
+   +--> scripts
+   +--> browser automation
+   +--> workflow packages
+   +--> runtime / gateway state
+   |
+   v
+Software world
+(APIs, UIs, internal tools, payment systems, policy logic)
+
+
+NEW WORLD
+
+User objective
+   |
+   v
+Agent + authority
+(interpret, compare, approve, monitor)
+   |
+   v
+Broker / exchange
+(route objective to eligible providers)
+   |
+   v
+Provider offers
+(commitments with terms, timing, proof, failure conditions)
+   |
+   v
+Provider fulfillment
+(exact execution in provider-owned systems)
+   |
+   v
+Evidence + settlement
+(proof, receipts, disputes, refunds)

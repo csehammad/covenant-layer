@@ -1,0 +1,9 @@
+objective
+  -> discovery
+  -> offer
+  -> counteroffer
+  -> accept
+  -> fulfill
+  -> prove
+  -> settle
+  -> dispute
