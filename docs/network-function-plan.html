@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Covenant Network Function Plan</title>
+    <style>
+      :root {
+        --bg: #f7f9fc;
+        --panel: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --accent: #1d4ed8;
+        --line: #dbe4f0;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 20px 80px;
+      }
+      h1, h2, h3 {
+        line-height: 1.2;
+      }
+      h1 {
+        margin-top: 0;
+        font-size: 2rem;
+      }
+      h2 {
+        margin-top: 2rem;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+      }
+      h3 {
+        margin-top: 1.3rem;
+      }
+      p, li {
+        color: var(--text);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin: 12px 0;
+      }
+      code {
+        background: #eff4fb;
+        border: 1px solid #d6e2f3;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th, td {
+        border: 1px solid var(--line);
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #f1f5fb;
+      }
+      .accent {
+        color: var(--accent);
+      }
+      ol li {
+        margin-bottom: 8px;
+      }
+      .mermaid {
+        background: #fbfdff;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 12px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Covenant Network Function Plan</h1>
+      <p class="muted">
+        Planning document for how the Covenant Network functions, runs, and onboards participants.
+      </p>
+
+      <section>
+        <h2>1) Network Purpose and Operating Principle</h2>
+        <div class="panel">
+          <p>
+            Covenant Network coordinates outcomes across independent participants. The key boundary is:
+          </p>
+          <ul>
+            <li><strong>Agent coordinates</strong> intent, authority, offer comparison, and acceptance.</li>
+            <li><strong>Provider fulfills</strong> deterministic execution and supplies evidence.</li>
+            <li><strong>Settlement service records</strong> final lifecycle state.</li>
+          </ul>
+          <p>
+            The protocol sits above existing HTTP request/response APIs and standardizes commitments, not internal workflows.
+          </p>
+        </div>
+        <h3>Network Relationship Map</h3>
+        <div class="mermaid">
+flowchart LR
+  userNode[User]
+  agentNode[Agent]
+  authorityNode[AuthorityService]
+  brokerNode[Broker]
+  providerNode[Provider]
+  evidenceNode[EvidenceService]
+  settlementNode[SettlementService]
+  dashboardNode[RealtimeDashboard]
+
+  userNode -->|"objective + policy"| agentNode
+  agentNode -->|"authority check"| authorityNode
+  agentNode -->|"objective routing"| brokerNode
+  brokerNode -->|"offer request"| providerNode
+  providerNode -->|"offer"| brokerNode
+  brokerNode -->|"offer set"| agentNode
+  agentNode -->|"acceptance"| providerNode
+  providerNode -->|"evidence"| evidenceNode
+  providerNode -->|"state update"| settlementNode
+  evidenceNode -->|"event stream"| dashboardNode
+  settlementNode -->|"event stream"| dashboardNode
+        </div>
+      </section>
+
+      <section>
+        <h2>2) Core Actors and Responsibilities</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Actor</th>
+              <th>Primary Responsibilities</th>
+              <th>Must Not</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User</td>
+              <td>Define objective, grant authority, approve when required, dispute if needed.</td>
+              <td>Need to know provider internals.</td>
+            </tr>
+            <tr>
+              <td>Agent</td>
+              <td>Interpret objective, request offers, compare, apply policy, issue acceptance.</td>
+              <td>Bypass authority bounds or fabricate settlement.</td>
+            </tr>
+            <tr>
+              <td>Broker</td>
+              <td>Route objectives, collect offers, provide traceable offer provenance.</td>
+              <td>Pretend to be provider fulfillment.</td>
+            </tr>
+            <tr>
+              <td>Provider</td>
+              <td>Issue terms, fulfill accepted commitments, submit evidence.</td>
+              <td>Claim fulfillment without verifiable proof.</td>
+            </tr>
+            <tr>
+              <td>Evidence Service</td>
+              <td>Store and expose evidence records with integrity metadata.</td>
+              <td>Alter evidence payloads silently.</td>
+            </tr>
+            <tr>
+              <td>Settlement Service</td>
+              <td>Record lifecycle state transitions and references to evidence.</td>
+              <td>Settle without acceptance and evidence linkage.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3) Protocol Lifecycle (Runtime Function)</h2>
+        <ol>
+          <li><strong>Objective Created:</strong> User/agent publishes objective with constraints and preferences.</li>
+          <li><strong>Authority Checked:</strong> Grant validated for scope, budget, expiry, and approvals.</li>
+          <li><strong>Discovery + Offers:</strong> Broker routes objective to eligible providers.</li>
+          <li><strong>Comparison:</strong> Agent ranks offers and creates shortlist.</li>
+          <li><strong>Approval + Acceptance:</strong> User approval (if required), then one accepted offer.</li>
+          <li><strong>Fulfillment:</strong> Chosen provider executes via internal systems.</li>
+          <li><strong>Evidence Submission:</strong> Provider submits proof records.</li>
+          <li><strong>Settlement:</strong> Service records state (<code>fulfilled</code>, <code>failed</code>, <code>refunded</code>, <code>disputed</code>, <code>expired</code>).</li>
+          <li><strong>Dispute (optional):</strong> Escalation with verification and revised settlement state.</li>
+        </ol>
+        <h3>Lifecycle Flow</h3>
+        <div class="mermaid">
+flowchart LR
+  objectiveStep[Objective]
+  authorityStep[AuthorityCheck]
+  discoveryStep[Discovery]
+  offersStep[Offers]
+  compareStep[Compare]
+  approvalStep[Approval]
+  acceptanceStep[Acceptance]
+  fulfillStep[Fulfillment]
+  evidenceStep[Evidence]
+  settlementStep[Settlement]
+  disputeStep[Dispute]
+
+  objectiveStep --> authorityStep --> discoveryStep --> offersStep --> compareStep --> approvalStep --> acceptanceStep --> fulfillStep --> evidenceStep --> settlementStep
+  settlementStep -->|"contested"| disputeStep
+        </div>
+      </section>
+
+      <section>
+        <h2>4) How the Network Runs Day-to-Day</h2>
+        <h3>4.1 Runtime Topology</h3>
+        <ul>
+          <li>Each actor runs as an independent service/process with explicit API boundaries.</li>
+          <li>Events are published to a network event bus and streamed via SSE for monitoring.</li>
+          <li>Every event includes <code>layer</code>, <code>protocol_stage</code>, and <code>objective_id</code>.</li>
+        </ul>
+
+        <h3>4.2 Operational Controls</h3>
+        <ul>
+          <li>Health checks for all services (<code>/health</code>).</li>
+          <li>Replay-safe IDs for objective, offer, acceptance, evidence, settlement.</li>
+          <li>Timestamp + expiry checks for authority and offers.</li>
+          <li>Audit logs for offer provenance and state transitions.</li>
+        </ul>
+
+        <h3>4.3 SLOs and Guardrails</h3>
+        <ul>
+          <li>Offer response latency budgets per objective type.</li>
+          <li>Acceptance-to-fulfillment timing thresholds.</li>
+          <li>Minimum evidence completeness requirements before settlement.</li>
+          <li>Automatic downgrade or throttling for low-integrity participants.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5) Onboarding Plan by Actor Type</h2>
+        <h3>Onboarding State Machine</h3>
+        <div class="mermaid">
+flowchart LR
+  requestedState[Requested]
+  identityState[IdentityVerified]
+  conformanceState[ConformancePassed]
+  probationState[Probation]
+  activeState[Active]
+  restrictedState[Restricted]
+  revokedState[Revoked]
+
+  requestedState --> identityState --> conformanceState --> probationState --> activeState
+  probationState -->|"quality issues"| restrictedState
+  activeState -->|"severe breach"| restrictedState
+  restrictedState -->|"recovery audit pass"| probationState
+  restrictedState -->|"continued failure"| revokedState
+        </div>
+
+        <h3>5.1 Provider Onboarding</h3>
+        <ol>
+          <li><strong>Identity:</strong> Verify operator, issue network identity, key registration.</li>
+          <li><strong>Capability Declaration:</strong> Declare supported verticals, objective classes, and constraints.</li>
+          <li><strong>Conformance Tests:</strong> Validate offer, acceptance, evidence schema compliance.</li>
+          <li><strong>Economic Terms:</strong> Configure dispute/refund policies and optional bond requirements.</li>
+          <li><strong>Probation:</strong> Limited traffic slice and stricter quality thresholds.</li>
+          <li><strong>Promotion:</strong> Move to active tier after reliability and evidence quality targets are met.</li>
+        </ol>
+
+        <h3>5.2 Broker Onboarding</h3>
+        <ol>
+          <li>Identity + route policy disclosure.</li>
+          <li>Offer provenance guarantees and anti-suppression checks.</li>
+          <li>Fair routing test suite with synthetic objectives.</li>
+          <li>Monitoring hooks for route transparency metrics.</li>
+        </ol>
+
+        <h3>5.3 Settlement Service Onboarding</h3>
+        <ol>
+          <li>State machine conformance (<code>fulfilled/failed/refunded/disputed/expired</code>).</li>
+          <li>Evidence reference integrity checks.</li>
+          <li>Dispute transition correctness and immutability guarantees.</li>
+          <li>Independent audit endpoint certification.</li>
+        </ol>
+
+        <h3>5.4 Agent Onboarding</h3>
+        <ol>
+          <li>Authority handling and policy engine conformance.</li>
+          <li>Approval-gating verification for purchases/commitments.</li>
+          <li>Offer comparison explainability output requirements.</li>
+          <li>Safety checks against unauthorized acceptance.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>6) Participant Evaluation Framework</h2>
+        <div class="panel">
+          <p><strong>Score basis:</strong> verified outcomes, not claims.</p>
+          <ul>
+            <li>Fulfillment reliability (accepted -> fulfilled)</li>
+            <li>Term fidelity (delivered outcome matches accepted offer)</li>
+            <li>Evidence integrity and timeliness</li>
+            <li>Dispute rate and resolution quality</li>
+            <li>Price stability (quote-to-final variance)</li>
+            <li>Latency and availability</li>
+          </ul>
+          <p>
+            Suggested routing policy: reputation-weighted routing with protected trial allocation for new entrants.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>7) Governance and Ownership Model</h2>
+        <ul>
+          <li><strong>Protocol is stewarded</strong> by open governance, not a single operator.</li>
+          <li><strong>Network operation is federated:</strong> multiple brokers/providers/settlers can participate.</li>
+          <li><strong>User authority remains local:</strong> users/orgs decide delegation and approval policy.</li>
+          <li><strong>Upgrades are versioned:</strong> backward-compatible windows and migration periods.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>8) First Implementation Milestones</h2>
+        <ol>
+          <li>Ship travel vertical reference network with realtime event dashboard.</li>
+          <li>Add provider probation/active/restricted state machine.</li>
+          <li>Add dispute simulation path and metrics view.</li>
+          <li>Publish onboarding checklists and conformance test kit.</li>
+          <li>Introduce signed message envelopes for all protocol objects.</li>
+        </ol>
+      </section>
+
+      <p class="muted">
+        <span class="accent">Design invariant:</span> no settlement credit without valid acceptance and evidence linkage.
+      </p>
+    </main>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "default" });
+    </script>
+  </body>
+</html>

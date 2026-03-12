@@ -1,0 +1,77 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_agent_example_001"
+participant_id: "agent.example.orchestrator"
+participant_type: "agent_service"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-09-12T12:00:00Z"
+
+identity:
+  legal_name: "Example Agent Orchestrator"
+  website: "https://agent.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@agent.example.com"
+    security: "security@agent.example.com"
+
+keys:
+  signing:
+    - kid: "agent-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkagent..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-06-30T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "max_stops", "no_overnight_layover"]
+
+agent_policy:
+  authority_handling_policy_ref: "https://agent.example.com/policies/authority"
+  authority_proof_method: "delegated_grant_signature"
+  approval_gating_required: true
+  approval_reference_format: "approval_id:v1"
+  grant_revocation_check_seconds: 60
+  max_authority_ttl_seconds: 86400
+  acceptance_guardrails_ref: "https://agent.example.com/policies/acceptance-guardrails"
+  escalation_policy_ref: "https://agent.example.com/policies/escalation"
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://agent.example.com/policies/refunds"
+  dispute_policy_ref: "https://agent.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["approval_reference", "acceptance_record"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  objective_ingest: "https://agent.example.com/covenant/objective"
+  acceptance_emit: "https://agent.example.com/covenant/accept"
+  status_query: "https://agent.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x0000000000000000000000000000000000000000"
+  manifest_cid: "bafyagent..."
+  manifest_hash: "sha256:..."
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "agent-service.template.yaml.sig"

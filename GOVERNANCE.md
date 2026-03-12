@@ -10,7 +10,7 @@ The near-term goals are:
 
 - define the problem clearly
 - make the protocol lifecycle precise
-- build a small demo
+- publish a framework-first onboarding and registry model
 - sharpen the security model
 - stabilize the core vocabulary
 

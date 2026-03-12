@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://covenant-layer.org/spec/schemas/protocol-envelope.v1.schema.json",
+  "title": "Covenant Protocol Envelope v1",
+  "type": "object",
+  "required": [
+    "object_type",
+    "object_version",
+    "object_id",
+    "issued_at",
+    "issuer_id",
+    "payload",
+    "integrity"
+  ],
+  "properties": {
+    "object_type": {
+      "type": "string",
+      "enum": [
+        "objective",
+        "authority_grant",
+        "offer",
+        "acceptance",
+        "evidence_record",
+        "settlement_receipt"
+      ]
+    },
+    "object_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "object_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issuer_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "payload": {
+      "type": "object"
+    },
+    "integrity": {
+      "$ref": "#/$defs/integrity"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "object_type": { "const": "objective" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/objectivePayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "authority_grant" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/authorityGrantPayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "offer" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/offerPayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "acceptance" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/acceptancePayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "evidence_record" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/evidenceRecordPayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "settlement_receipt" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/settlementReceiptPayload" } }
+      }
+    }
+  ],
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": ["alg", "kid", "value"],
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": ["Ed25519", "secp256k1"]
+        },
+        "kid": {
+          "type": "string",
+          "minLength": 3
+        },
+        "value": {
+          "type": "string",
+          "minLength": 16
+        }
+      },
+      "additionalProperties": true
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["canonicalization", "hash_alg", "hash", "signature"],
+      "properties": {
+        "canonicalization": {
+          "type": "string",
+          "enum": ["jcs-rfc8785"]
+        },
+        "hash_alg": {
+          "type": "string",
+          "enum": ["sha256"]
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "signature": {
+          "$ref": "#/$defs/signature"
+        }
+      },
+      "additionalProperties": true
+    },
+    "objectivePayload": {
+      "type": "object",
+      "required": ["objective_id", "principal_id", "target_outcome", "constraints", "expiry"],
+      "properties": {
+        "objective_id": { "type": "string" },
+        "principal_id": { "type": "string" },
+        "target_outcome": { "type": "object" },
+        "constraints": { "type": "object" },
+        "expiry": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    },
+    "authorityGrantPayload": {
+      "type": "object",
+      "required": [
+        "grant_id",
+        "issuer",
+        "holder",
+        "allowed_actions",
+        "expiry",
+        "revocation_ref"
+      ],
+      "properties": {
+        "grant_id": { "type": "string" },
+        "issuer": { "type": "string" },
+        "holder": { "type": "string" },
+        "allowed_actions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "expiry": { "type": "string", "format": "date-time" },
+        "revocation_ref": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "offerPayload": {
+      "type": "object",
+      "required": [
+        "offer_id",
+        "provider_id",
+        "objective_id",
+        "terms",
+        "expires_at",
+        "acceptance_conditions"
+      ],
+      "properties": {
+        "offer_id": { "type": "string" },
+        "provider_id": { "type": "string" },
+        "objective_id": { "type": "string" },
+        "terms": { "type": "object" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "acceptance_conditions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "acceptancePayload": {
+      "type": "object",
+      "required": ["acceptance_id", "offer_id", "accepted_by", "accepted_at"],
+      "properties": {
+        "acceptance_id": { "type": "string" },
+        "offer_id": { "type": "string" },
+        "accepted_by": { "type": "string" },
+        "accepted_at": { "type": "string", "format": "date-time" },
+        "approval_ref": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "evidenceRecordPayload": {
+      "type": "object",
+      "required": [
+        "evidence_id",
+        "commitment_ref",
+        "submitted_by",
+        "evidence_type",
+        "evidence_ref",
+        "submitted_at"
+      ],
+      "properties": {
+        "evidence_id": { "type": "string" },
+        "commitment_ref": { "type": "string" },
+        "submitted_by": { "type": "string" },
+        "evidence_type": { "type": "string" },
+        "evidence_ref": { "type": "string" },
+        "submitted_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    },
+    "settlementReceiptPayload": {
+      "type": "object",
+      "required": ["receipt_id", "commitment_ref", "state", "recorded_at", "evidence_refs"],
+      "properties": {
+        "receipt_id": { "type": "string" },
+        "commitment_ref": { "type": "string" },
+        "state": {
+          "type": "string",
+          "enum": ["fulfilled", "failed", "refunded", "disputed", "expired"]
+        },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

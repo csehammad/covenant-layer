@@ -1,0 +1,61 @@
+name: Framework CI
+
+on:
+  push:
+    paths:
+      - "framework/**"
+      - ".github/workflows/framework-ci.yml"
+  pull_request:
+    paths:
+      - "framework/**"
+      - ".github/workflows/framework-ci.yml"
+
+jobs:
+  rust:
+    name: Rust Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: framework
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: framework
+
+      - name: Check format
+        run: cargo fmt --all -- --check
+
+      - name: Lint
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests
+        run: cargo test --all
+
+  solidity:
+    name: Solidity Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: framework
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install forge-std
+        run: forge install foundry-rs/forge-std
+
+      - name: Build contracts
+        run: forge build
+
+      - name: Run contract tests
+        run: forge test

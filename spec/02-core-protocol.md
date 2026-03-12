@@ -4,6 +4,12 @@ This document defines the core roles, objects, lifecycle, and state semantics of
 
 The protocol is not a provider-internal workflow engine. It is the public coordination model between participants.
 
+## Normative language
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are to be interpreted as normative requirements.
+
+Unless explicitly stated otherwise, implementation-specific behavior is allowed only if it does not violate required protocol semantics.
+
 ## Roles
 
 ### User
@@ -206,6 +212,21 @@ A Settlement Receipt should include at least:
 
 The Settlement Receipt is how the network records the outcome of the commitment lifecycle.
 
+## Object identity and integrity baseline
+
+For interoperability, each protocol object SHOULD follow a common baseline:
+
+- globally unique identifier
+- issuer/participant identifier
+- creation timestamp
+- expiry or validity window where applicable
+- deterministic hash over canonical object payload
+- detached or embedded signature reference
+
+At minimum, Offer, Acceptance, Evidence Record, and Settlement Receipt MUST be integrity-verifiable.
+
+Unsigned, expired, or integrity-mismatched objects MUST be treated as invalid for state advancement.
+
 ## Settlement states
 
 The minimum settlement states are:
@@ -309,6 +330,163 @@ The outcome of an accepted commitment must be recorded through settlement state.
 Dispute is not an implementation detail.
 
 If fulfillment is contested, the protocol must support an explicit disputed state and linked evidence.
+
+## Participant registration and onboarding
+
+The network must have an explicit process for admitting operational participants.
+
+This section defines the minimum baseline for onboarding:
+- Providers
+- Brokers
+- Verifiers
+- Settlement Services
+- Agent Services
+
+### Registration object
+
+Each participant type must publish a signed registration manifest before handling production flow.
+
+The registration manifest should include at least:
+- participant identifier
+- participant type
+- conformance profile identifier
+- public signing keys and key validity window
+- capability declaration
+- supported objective or domain scope
+- evidence profile and integrity method
+- policy references for refund, dispute, and settlement behavior
+- service interface handles used for protocol exchange
+- manifest issuance and expiry timestamps
+
+The canonical representation may be YAML or JSON, but:
+- it must be canonicalized before signing
+- signature verification must be deterministic
+- expired manifests must be treated as invalid
+
+Conformance profiles MUST be versioned.
+
+For the framework baseline, manifests MUST declare:
+- `conformance_profile: onboarding-v1`
+
+Future breaking conformance changes MUST use a new profile identifier (for example, `onboarding-v2`).
+
+### Registration state machine
+
+The minimum registration states are:
+- requested
+- identity_verified
+- conformance_passed
+- probation
+- active
+- restricted
+- revoked
+
+Implementations may add substates, but these are the required baseline states.
+
+### Onboarding rules
+
+#### Rule 8: signed registration is required
+A participant must not be treated as eligible for production routing unless it has a valid signed registration manifest.
+
+Unsigned or unverifiable registrations are ineligible.
+
+#### Rule 9: conformance before production flow
+A participant must pass protocol conformance checks before entering active production status.
+
+Conformance should include at least:
+- schema correctness for protocol objects
+- signature handling correctness
+- lifecycle transition correctness
+- evidence submission correctness
+
+#### Rule 10: probation for new participants
+Newly admitted participants should begin in probation with bounded traffic exposure.
+
+Probation participants may be promoted only after meeting reliability and evidence quality thresholds defined by the participating network.
+
+#### Rule 11: eligibility is state-bound
+Only participants in active state are fully eligible for normal routing.
+
+Restricted participants must have reduced or zero routing eligibility depending on policy.
+Revoked participants must be ineligible.
+
+#### Rule 12: registration changes are explicit
+Capability changes, key rotation, policy updates, and status changes must be explicit updates linked to participant identity.
+
+Silent mutation of participant registration state is non-compliant.
+
+#### Rule 13: deterministic eligibility resolution
+Routing participants (agent/broker) MUST resolve participant eligibility from explicit registration state.
+
+At minimum:
+- `active` is routable
+- `probation` is bounded by policy
+- `restricted` is constrained or blocked by policy
+- `revoked` is not routable
+
+Eligibility decisions SHOULD be explainable from recorded state and policy inputs.
+
+### Provider-specific minimums
+
+A Provider registration should include:
+- offered domain categories
+- objective classes supported
+- major constraints supported
+- fulfillment accountability declaration
+- evidence types it can produce after acceptance
+
+Providers without domain-appropriate evidence support should not be eligible for active status.
+
+### Settlement service-specific minimums
+
+A Settlement Service registration should include:
+- supported settlement states
+- dispute transition handling declaration
+- evidence reference integrity method
+
+A Settlement Service must not record fulfilled or failed outcomes without linked evidence references.
+
+### Broker-specific minimums
+
+A Broker registration should include:
+- objective routing scope
+- provider eligibility policy reference
+- offer provenance handling declaration
+
+A Broker should preserve traceability between returned offers and originating providers.
+
+## Dispute and resolution baseline
+
+Dispute handling MUST be explicit and stateful.
+
+Minimum required behavior:
+
+- any contested commitment can transition to `disputed`
+- dispute reason and references MUST be recorded
+- supporting and rebuttal evidence MAY be appended while disputed
+- settlement must eventually transition to a terminal resolved state (`fulfilled`, `failed`, or `refunded`) unless policy explicitly allows open disputes
+
+Networks SHOULD publish:
+- dispute responder roles
+- response-time objectives
+- escalation and arbitration paths
+- finality conditions for dispute closure
+
+## Versioning and compatibility
+
+To avoid hidden fragmentation:
+
+- protocol object schemas SHOULD include version metadata
+- conformance profile versions MUST be explicit
+- compatibility policy MUST be published before incompatible changes are enforced
+
+Implementations SHOULD fail closed when receiving unknown mandatory fields that alter commitment semantics.
+
+Detailed wire/canonicalization/error requirements are defined in `05-wire-integrity.md`.
+
+Detailed governance/dispute/upgrade requirements are defined in `06-governance-dispute-upgrades.md`.
+
+Version and profile compatibility requirements are defined in `07-compatibility-matrix.md`.
 
 ## Why this file matters
 

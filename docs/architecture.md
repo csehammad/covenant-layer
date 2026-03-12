@@ -120,6 +120,19 @@ Execution does not disappear. It becomes increasingly **provider-owned**.
 
 ---
 
+## Layer interface contracts
+
+To keep the layered model enforceable in production, each layer boundary should expose explicit contracts:
+
+- **Layer 5 -> Layer 4:** objective + authority + approval policy inputs
+- **Layer 4 -> Layer 3:** signed commitments, identity bindings, and evidence references
+- **Layer 4 -> Layer 2:** accepted commitment terms only (not raw user prompts)
+- **Layer 3 -> Layer 1:** verifiable records and status queries over standard transport
+
+If these boundaries are implicit, systems drift back into brittle procedure orchestration.
+
+---
+
 ## Old architecture vs new architecture
 
 **In the old architecture**, the agent spends too much of its energy at fulfillment and below:

@@ -1,0 +1,14 @@
+default_network: "base_sepolia"
+
+networks:
+  base_sepolia:
+    chain_id: 84532
+    rpc_url: "https://sepolia.base.org"
+    registry_contract: "0x0000000000000000000000000000000000000000"
+    explorer_url: "https://sepolia.basescan.org"
+
+  arbitrum_sepolia:
+    chain_id: 421614
+    rpc_url: "https://sepolia-rollup.arbitrum.io/rpc"
+    registry_contract: "0x0000000000000000000000000000000000000000"
+    explorer_url: "https://sepolia.arbiscan.io"

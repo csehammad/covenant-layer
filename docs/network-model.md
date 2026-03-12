@@ -81,6 +81,51 @@ A mature Covenant Network would likely contain:
 - trust relationships between participants
 - reputation and dispute handling over time
 
+## Registration and onboarding
+
+The network model assumes explicit participant admission rather than ad-hoc trust.
+
+In practice, participants should not be routed production flow until they:
+- publish a signed registration manifest
+- pass conformance checks
+- complete a probation period
+- reach active status
+
+The canonical protocol rules for this process are defined in:
+- `spec/02-core-protocol.md` (Participant registration and onboarding)
+
+The baseline lifecycle for participant admission is:
+- requested
+- identity_verified
+- conformance_passed
+- probation
+- active
+- restricted
+- revoked
+
+## Decentralization boundaries
+
+To prevent registry and routing monopoly, the network should enforce clear boundaries:
+
+- registration state is anchored in shared, publicly verifiable state (for example, chain-backed registry)
+- no single operator privately controls admission, routing, and settlement simultaneously
+- policy changes are governed through transparent governance processes
+- eligibility resolution is reproducible from public state plus published policy
+
+This keeps admission and operational trust auditable across organizations.
+
+## Shared network services (minimum)
+
+A production-grade network shape should provide at least:
+
+- participant registry and status resolution
+- manifest/signature verification tooling
+- conformance profile publication and version history
+- dispute recording and resolution interfaces
+- evidence retention and integrity verification interfaces
+
+Without these shared services, interoperability degrades into bilateral integrations.
+
 ## Main claim
 
 The important shift is where the complexity lives.

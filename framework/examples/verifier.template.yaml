@@ -1,0 +1,72 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_verifier_example_001"
+participant_id: "verifier.example.audit"
+participant_type: "verifier"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-09-12T12:00:00Z"
+
+identity:
+  legal_name: "Example Verification Labs"
+  website: "https://verifier.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@verifier.example.com"
+    security: "security@verifier.example.com"
+
+keys:
+  signing:
+    - kid: "verifier-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkverify..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-06-30T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "max_stops", "cabin_class"]
+
+verification_policy:
+  verification_domains: ["travel.flight.settlement", "travel.flight.evidence"]
+  replay_protection: true
+  verification_sla_seconds: 300
+  decision_policy_ref: "https://verifier.example.com/policies/decision"
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://verifier.example.com/policies/refunds"
+  dispute_policy_ref: "https://verifier.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["verification_result", "evidence_hash_map"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  verify: "https://verifier.example.com/covenant/verify"
+  status_query: "https://verifier.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x0000000000000000000000000000000000000000"
+  manifest_cid: "bafyverifier..."
+  manifest_hash: "sha256:..."
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "verifier.template.yaml.sig"

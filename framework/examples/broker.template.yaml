@@ -1,0 +1,74 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_broker_example_001"
+participant_id: "broker.example.exchange"
+participant_type: "broker"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-09-12T12:00:00Z"
+
+identity:
+  legal_name: "Example Routing Exchange"
+  website: "https://broker.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@broker.example.com"
+    security: "security@broker.example.com"
+
+keys:
+  signing:
+    - kid: "broker-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkbroker..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-06-30T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "cabin_class", "max_stops"]
+
+broker_policy:
+  routing_scope: ["travel.flight", "travel.hotel"]
+  offer_provenance_policy_ref: "https://broker.example.com/policies/offer-provenance"
+  conflict_of_interest_policy_ref: "https://broker.example.com/policies/conflicts"
+  routing_audit_log_retention_days: 365
+  fairness_review_interval_days: 30
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://broker.example.com/policies/refunds"
+  dispute_policy_ref: "https://broker.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["offer_provenance_log"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  objective_ingest: "https://broker.example.com/covenant/objective"
+  offer_aggregation: "https://broker.example.com/covenant/offers"
+  status_query: "https://broker.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x0000000000000000000000000000000000000000"
+  manifest_cid: "bafybroker..."
+  manifest_hash: "sha256:..."
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "broker.template.yaml.sig"

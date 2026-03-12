@@ -26,24 +26,62 @@ In the Covenant Layer model:
 
 The key shift is from procedures to commitments.
 
-## Vocabulary
+## Project components
 
-### Covenant Layer
-The broader shift from procedural interfaces to outcome coordination.
+- **Covenant Layer**: the architectural shift from procedural interfaces to outcome coordination.
+- **Covenant Network**: the participant ecosystem that forms around shared commitment semantics.
+- **Covenant Protocol**: the formal rulebook for objectives, authority, offers, acceptance, evidence, settlement, and disputes.
+- **Covenant Framework (Rust)**: implementation scaffold for participant onboarding, conformance, and registry operations.
 
-### Covenant Network
-The ecosystem that forms when many participants adopt the model.
+## Repository layout (current)
 
-### Covenant Protocol
-The formal rulebook that defines objectives, authority, offers, acceptance, evidence, settlement, and dispute.
+- `spec/` - protocol specification set
+  - `00-intro.md` to `04-examples.md` define core context, protocol, security, and examples
+  - `05-wire-integrity.md` defines envelope, canonicalization/signature, replay/idempotency, and error taxonomy
+  - `06-governance-dispute-upgrades.md` defines governance authority, dispute lifecycle, and upgrade controls
+  - `07-compatibility-matrix.md` defines protocol/profile compatibility and migration behavior
+  - `schemas/protocol-envelope.v1.schema.json` provides machine-readable schema baseline
+- `framework/` - Rust implementation for onboarding and registry workflow
+  - manifest signing and verification
+  - actor-specific conformance checks (provider/broker/settlement/verifier/agent service)
+  - onboarding state transitions and eligibility model
+  - local mode and EVM L2 chain mode
+  - runbooks, governance model, contract interface, and examples
+- `docs/` - architecture, mental model, network model, security rationale, and planning artifacts
+- `diagrams/` - text diagrams for old-vs-new model, layered architecture, and lifecycle
+- `article.md` - Part I essay (concept thesis)
+- `article-part-ii.md` - Part II essay (implementation and under-the-hood details)
+- `GOVERNANCE.md`, `CONTRIBUTING.md`, `LICENSE.md`, `LICENSES/` - project governance/contribution/license artifacts
 
-## Repository layout
+## Framework quick start
 
-- `docs/` — essays, rationale, network model, architecture
-- `spec/` — formal protocol draft
-- `diagrams/` — text diagrams for the model
-- `demo/` — proof-of-concept outline
+From repo root:
+
+```bash
+cd framework
+cargo run -- init
+cargo run -- conformance --manifest provider-manifest.template.yaml
+cargo run -- sign --manifest provider-manifest.template.yaml
+cargo run -- verify-signature --manifest provider-manifest.template.yaml
+```
+
+Common checks:
+
+```bash
+cd framework
+make test-rust
+make conformance-all
+```
 
 ## Status
 
-This is an early working draft. The goal is to make the idea concrete enough to critique, implement, and improve.
+This is an active draft + implementation repository.
+
+Current state:
+
+- protocol model is documented with formal extension chapters
+- onboarding and conformance pipeline is implemented in Rust
+- actor templates and runbooks are included for end-to-end testnet registration workflows
+- security/governance/dispute/compatibility baselines are explicitly documented
+
+The goal remains the same: make the model concrete enough to critique, implement, and improve.

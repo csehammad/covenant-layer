@@ -1,0 +1,74 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_settlement_example_001"
+participant_id: "settlement.example.network"
+participant_type: "settlement_service"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-09-12T12:00:00Z"
+
+identity:
+  legal_name: "Example Settlement Network"
+  website: "https://settlement.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@settlement.example.com"
+    security: "security@settlement.example.com"
+
+keys:
+  signing:
+    - kid: "settlement-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mksettle..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-06-30T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "cabin_class"]
+
+settlement_policy:
+  supported_states: ["fulfilled", "failed", "refunded", "disputed", "expired"]
+  dispute_transition_policy_ref: "https://settlement.example.com/policies/dispute-transitions"
+  evidence_link_integrity_ref: "https://settlement.example.com/policies/evidence-integrity"
+  finality_wait_seconds: 300
+  replay_protection: true
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://settlement.example.com/policies/refunds"
+  dispute_policy_ref: "https://settlement.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["settlement_receipt", "state_transition_proof"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  settlement_write: "https://settlement.example.com/covenant/settlement"
+  settlement_read: "https://settlement.example.com/covenant/settlement/{id}"
+  status_query: "https://settlement.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x0000000000000000000000000000000000000000"
+  manifest_cid: "bafysettlement..."
+  manifest_hash: "sha256:..."
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "settlement-service.template.yaml.sig"

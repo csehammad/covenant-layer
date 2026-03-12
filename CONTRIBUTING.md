@@ -13,7 +13,7 @@ Useful contributions include:
 - better example flows
 - missing edge cases
 - security or trust model corrections
-- demo feedback
+- framework feedback
 - terminology cleanup
 
 ## Less useful contributions
