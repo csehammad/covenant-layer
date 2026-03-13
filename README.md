@@ -287,6 +287,7 @@ The protocol spec, onboarding framework, and chain-backed registry are functiona
 ## Further reading
 
 - [The Future of Agents Is Outcome Coordination](https://levelup.gitconnected.com/the-future-of-agents-is-outcome-coordination-09807612ca2d) (GitConnected)
+- [The Future of Agents Is Outcome Coordination, Part II](https://medium.com/@hammadulhaq/the-future-of-agents-is-outcome-coordination-part-ii-dc251091c294) (Medium)
 
 ---
 
