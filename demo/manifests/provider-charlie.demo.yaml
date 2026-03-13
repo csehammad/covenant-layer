@@ -1,0 +1,74 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_provider_demo_charlie_001"
+participant_id: "provider.demo.charlie"
+participant_type: "provider"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-12-31T23:59:59Z"
+
+identity:
+  legal_name: "Demo Provider Charlie"
+  website: "https://provider-charlie.demo.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@provider-charlie.demo.example.com"
+    security: "security@provider-charlie.demo.example.com"
+
+keys:
+  signing:
+    - kid: "provider-charlie-demo-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkprovidercharliedemo..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-12-31T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "cabin_class", "no_overnight_layover", "max_stops"]
+
+provider_policy:
+  fulfillment_sla_seconds: 240
+  idempotency_window_seconds: 86400
+  incident_response_policy_ref: "https://provider-charlie.demo.example.com/policies/incident"
+  data_protection_policy_ref: "https://provider-charlie.demo.example.com/policies/data-protection"
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://provider-charlie.demo.example.com/policies/refunds"
+  dispute_policy_ref: "https://provider-charlie.demo.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["booking_confirmation", "ticket_issued"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  offer_submission: "https://provider-charlie.demo.example.com/covenant/offer"
+  fulfillment_notice: "https://provider-charlie.demo.example.com/covenant/fulfillment"
+  evidence_submission: "https://provider-charlie.demo.example.com/covenant/evidence"
+  status_query: "https://provider-charlie.demo.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x1111111111111111111111111111111111111111"
+  manifest_cid: "bafyprovidercharliedemo..."
+  manifest_hash: "sha256:placeholder"
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "provider-charlie.demo.yaml.sig"

@@ -1,0 +1,24 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'lineColor': '#58a6ff', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'edgeLabelBackground': '#161b22'}}}%%
+
+flowchart TB
+    REG["<b>Register + Stake</b><br/>provider locks collateral"] --> COM["<b>Commit</b><br/>accept objective, terms bind"]
+    COM --> FUL["<b>Fulfill</b><br/>provider-owned execution"]
+    FUL --> EV["<b>Evidence</b><br/>signed proof artifacts"]
+    EV --> VER["<b>Verify</b><br/>independent integrity check"]
+    VER --> SET["<b>Settle On-Chain</b><br/>fulfilled · failed · disputed"]
+    SET --> REP["<b>Reputation</b><br/>derived from settlement history"]
+    REP --> ROUTE["<b>Routing Priority</b><br/>better reputation = more flow"]
+    ROUTE --> COM
+
+    SET -->|"failure"| SLASH["<b>Slash</b><br/>graduated penalty"]
+    SLASH -->|"stake reduced"| REG
+
+    style REG fill:#172554,stroke:#60a5fa,color:#93c5fd,stroke-width:2px
+    style COM fill:#172554,stroke:#818cf8,color:#c4b5fd,stroke-width:2px
+    style FUL fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
+    style EV fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
+    style VER fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
+    style SET fill:#052e16,stroke:#4ade80,color:#bbf7d0,stroke-width:3px
+    style REP fill:#1c1917,stroke:#facc15,color:#fef08a,stroke-width:2px
+    style ROUTE fill:#1c1917,stroke:#facc15,color:#fef08a,stroke-width:2px
+    style SLASH fill:#450a0a,stroke:#f87171,color:#fecaca,stroke-width:2px

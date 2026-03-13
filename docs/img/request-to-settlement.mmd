@@ -1,0 +1,31 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'primaryBorderColor': '#555', 'lineColor': '#58a6ff', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'clusterBkg': '#161b22', 'titleColor': '#e0e0e0', 'edgeLabelBackground': '#161b22'}}}%%
+
+flowchart LR
+    U["<b>User Intent</b><br/>goal + constraints"] --> A["<b>Agent</b><br/>authority + policy"]
+    A --> O["<b>Objective</b><br/>+ authority grant"]
+    O --> B["<b>Broker</b><br/>routing + eligibility"]
+    B --> P1["Provider A<br/>Offer"]
+    B --> P2["Provider B<br/>Offer"]
+    B --> P3["Provider C<br/>Offer"]
+    P1 --> C["<b>Compare</b><br/>policy checks"]
+    P2 --> C
+    P3 --> C
+    C --> X["<b>Acceptance</b><br/>commitment created"]
+    X --> F["<b>Fulfillment</b><br/>provider-owned"]
+    F --> E["<b>Evidence</b><br/>signed artifacts"]
+    E --> V["<b>Verifier</b><br/>integrity check"]
+    V --> S["<b>Settlement</b><br/>on-chain record"]
+
+    style U fill:#1f2937,stroke:#60a5fa,color:#e0e0e0,stroke-width:2px
+    style A fill:#1f2937,stroke:#60a5fa,color:#e0e0e0,stroke-width:2px
+    style O fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style B fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style P1 fill:#1a2332,stroke:#64748b,color:#c0c0c0,stroke-width:1px
+    style P2 fill:#1a2332,stroke:#64748b,color:#c0c0c0,stroke-width:1px
+    style P3 fill:#1a2332,stroke:#64748b,color:#c0c0c0,stroke-width:1px
+    style C fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style X fill:#172554,stroke:#facc15,color:#fef08a,stroke-width:3px
+    style F fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style E fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style V fill:#1e293b,stroke:#818cf8,color:#e0e0e0,stroke-width:1px
+    style S fill:#052e16,stroke:#4ade80,color:#bbf7d0,stroke-width:3px

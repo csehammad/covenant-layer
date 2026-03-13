@@ -1,0 +1,77 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_agent_demo_001"
+participant_id: "agent.demo.orchestrator"
+participant_type: "agent_service"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-12-31T23:59:59Z"
+
+identity:
+  legal_name: "Demo Agent Orchestrator"
+  website: "https://agent.demo.example.com"
+  jurisdictions: ["US"]
+  contacts:
+    ops: "ops@agent.demo.example.com"
+    security: "security@agent.demo.example.com"
+
+keys:
+  signing:
+    - kid: "agent-demo-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkagentdemo..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-12-31T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight"]
+  constraints_supported: ["max_budget", "max_stops", "no_overnight_layover"]
+
+agent_policy:
+  authority_handling_policy_ref: "https://agent.demo.example.com/policies/authority"
+  authority_proof_method: "delegated_grant_signature"
+  approval_gating_required: true
+  approval_reference_format: "approval_id:v1"
+  grant_revocation_check_seconds: 60
+  max_authority_ttl_seconds: 86400
+  acceptance_guardrails_ref: "https://agent.demo.example.com/policies/acceptance"
+  escalation_policy_ref: "https://agent.demo.example.com/policies/escalation"
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://agent.demo.example.com/policies/refunds"
+  dispute_policy_ref: "https://agent.demo.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["approval_reference", "acceptance_record"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  objective_ingest: "https://agent.demo.example.com/covenant/objective"
+  acceptance_emit: "https://agent.demo.example.com/covenant/accept"
+  status_query: "https://agent.demo.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x1111111111111111111111111111111111111111"
+  manifest_cid: "bafyagentdemo..."
+  manifest_hash: "sha256:placeholder"
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "agent-service.demo.yaml.sig"

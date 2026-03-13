@@ -1,0 +1,74 @@
+manifest_version: "1.0"
+conformance_profile: "onboarding-v1"
+manifest_id: "pmf_provider_demo_alpha_001"
+participant_id: "provider.demo.alpha"
+participant_type: "provider"
+
+issued_at: "2026-03-12T12:00:00Z"
+expires_at: "2026-12-31T23:59:59Z"
+
+identity:
+  legal_name: "Demo Provider Alpha"
+  website: "https://provider-alpha.demo.example.com"
+  jurisdictions: ["US", "EU"]
+  contacts:
+    ops: "ops@provider-alpha.demo.example.com"
+    security: "security@provider-alpha.demo.example.com"
+
+keys:
+  signing:
+    - kid: "provider-alpha-demo-ed25519-2026-q1"
+      alg: "Ed25519"
+      public_key: "z6Mkprovideralphademo..."
+      valid_from: "2026-01-01T00:00:00Z"
+      valid_to: "2026-12-31T23:59:59Z"
+  rotation_policy_days: 90
+
+capabilities:
+  domains: ["travel.flight"]
+  objective_types: ["book_flight", "hold_fare"]
+  constraints_supported: ["max_budget", "cabin_class", "no_overnight_layover"]
+
+provider_policy:
+  fulfillment_sla_seconds: 300
+  idempotency_window_seconds: 86400
+  incident_response_policy_ref: "https://provider-alpha.demo.example.com/policies/incident"
+  data_protection_policy_ref: "https://provider-alpha.demo.example.com/policies/data-protection"
+
+commitment_policy:
+  offer_ttl_seconds_default: 900
+  acceptance_requires_approval_ref: true
+  max_settlement_window_seconds: 86400
+  refund_policy_ref: "https://provider-alpha.demo.example.com/policies/refunds"
+  dispute_policy_ref: "https://provider-alpha.demo.example.com/policies/disputes"
+
+evidence_profile:
+  required_types: ["booking_confirmation", "ticket_issued"]
+  integrity:
+    signature_format: "dsse"
+    hash_alg: "sha256"
+  retention_days: 365
+
+service_interfaces:
+  offer_submission: "https://provider-alpha.demo.example.com/covenant/offer"
+  fulfillment_notice: "https://provider-alpha.demo.example.com/covenant/fulfillment"
+  evidence_submission: "https://provider-alpha.demo.example.com/covenant/evidence"
+  status_query: "https://provider-alpha.demo.example.com/covenant/status"
+
+registry_anchor:
+  chain: "ethereum-l2"
+  contract: "0x1111111111111111111111111111111111111111"
+  manifest_cid: "bafyprovideralphademo..."
+  manifest_hash: "sha256:placeholder"
+  stake:
+    required: false
+    amount: 0
+    currency: "USD"
+
+admission_status:
+  state: "requested"
+  attestation_refs: []
+
+signature:
+  mode: "detached"
+  file: "provider-alpha.demo.yaml.sig"

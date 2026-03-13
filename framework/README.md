@@ -120,6 +120,7 @@ forge test
 - Chain mode requires signed transaction input and submits via `eth_sendRawTransaction`.
 - Without `--raw-tx`, chain mode fails by design.
 - State mirror is stored at `state/registry.json`.
+- End-to-end chain-only demo assets and runbook are in `../demo/README.md`.
 
 ## CI
 

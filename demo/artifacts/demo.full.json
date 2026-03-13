@@ -1,0 +1,121 @@
+{
+  "demo_name": "chain_only_e2e_demo",
+  "onboarding": {},
+  "objective_flow": {
+    "objective_id": "obj_demo_flight_001",
+    "scored_offers": [
+      {
+        "offer_id": "ofr_demo_alpha_001",
+        "provider_id": "provider.demo.alpha",
+        "valid": true,
+        "score": 0.5133,
+        "reasons": [
+          "price component=0.074",
+          "convenience component=1.000",
+          "refund component=0.650"
+        ],
+        "terms": {
+          "price_usd": 2315,
+          "stops": 0,
+          "overnight_layover": false,
+          "cabin": "premium_economy",
+          "refund_flexibility_score": 0.65,
+          "hold_minutes": 18
+        }
+      },
+      {
+        "offer_id": "ofr_demo_bravo_001",
+        "provider_id": "provider.demo.bravo",
+        "valid": true,
+        "score": 0.5217999999999999,
+        "reasons": [
+          "price component=0.224",
+          "convenience component=0.700",
+          "refund component=0.880"
+        ],
+        "terms": {
+          "price_usd": 1940,
+          "stops": 1,
+          "overnight_layover": false,
+          "cabin": "economy_plus",
+          "refund_flexibility_score": 0.88,
+          "hold_minutes": 35
+        }
+      },
+      {
+        "offer_id": "ofr_demo_charlie_001",
+        "provider_id": "provider.demo.charlie",
+        "valid": true,
+        "score": 0.3586,
+        "reasons": [
+          "price component=0.008",
+          "convenience component=0.700",
+          "refund component=0.550"
+        ],
+        "terms": {
+          "price_usd": 2480,
+          "stops": 1,
+          "overnight_layover": false,
+          "cabin": "business",
+          "refund_flexibility_score": 0.55,
+          "hold_minutes": 22
+        }
+      }
+    ],
+    "selected_offer": {
+      "offer_id": "ofr_demo_bravo_001",
+      "provider_id": "provider.demo.bravo",
+      "valid": true,
+      "score": 0.5217999999999999,
+      "reasons": [
+        "price component=0.224",
+        "convenience component=0.700",
+        "refund component=0.880"
+      ],
+      "terms": {
+        "price_usd": 1940,
+        "stops": 1,
+        "overnight_layover": false,
+        "cabin": "economy_plus",
+        "refund_flexibility_score": 0.88,
+        "hold_minutes": 35
+      }
+    },
+    "events": [
+      {
+        "event": "objective_published",
+        "ref": "env_objective_demo_001"
+      },
+      {
+        "event": "offer_published",
+        "ref": "env_ofr_demo_alpha_001",
+        "provider_id": "provider.demo.alpha"
+      },
+      {
+        "event": "offer_published",
+        "ref": "env_ofr_demo_bravo_001",
+        "provider_id": "provider.demo.bravo"
+      },
+      {
+        "event": "offer_published",
+        "ref": "env_ofr_demo_charlie_001",
+        "provider_id": "provider.demo.charlie"
+      },
+      {
+        "event": "offer_accepted",
+        "ref": "env_acceptance_demo_001",
+        "offer_id": "ofr_demo_bravo_001"
+      },
+      {
+        "event": "evidence_recorded",
+        "ref": "env_evidence_demo_001",
+        "provider_id": "provider.demo.bravo"
+      },
+      {
+        "event": "settlement_recorded",
+        "ref": "env_settlement_demo_001",
+        "state": "fulfilled"
+      }
+    ]
+  }
+}

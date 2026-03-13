@@ -1,0 +1,40 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'primaryBorderColor': '#555', 'lineColor': '#888', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'clusterBkg': '#161b22', 'titleColor': '#e0e0e0', 'edgeLabelBackground': '#161b22'}}}%%
+
+graph TB
+    subgraph OLD["<b>Today: Agent as Software Operator</b>"]
+        direction TB
+        U1[User Intent] --> A1[AI Agent]
+        A1 -->|"calls tools"| T1[Tool APIs]
+        A1 -->|"automates"| B1[Browser UI]
+        A1 -->|"runs"| C1[Code Execution]
+        A1 -->|"stitches"| W1[Workflow Steps]
+        T1 --> S1[Side Effects]
+        B1 --> S1
+        C1 --> S1
+        W1 --> S1
+        S1 -->|"hope it worked"| R1[Result?]
+    end
+
+    subgraph NEW["<b>Covenant: Agent as Outcome Coordinator</b>"]
+        direction TB
+        U2[User Intent] --> A2[AI Agent]
+        A2 -->|"publishes objective"| BR[Broker / Exchange]
+        BR --> P1[Provider A Offer]
+        BR --> P2[Provider B Offer]
+        BR --> P3[Provider C Offer]
+        P1 --> A2
+        P2 --> A2
+        P3 --> A2
+        A2 -->|"accepts best offer"| ACC[Acceptance]
+        ACC -->|"provider fulfills"| FUL[Provider Execution]
+        FUL -->|"submits evidence"| EV[Evidence + Verification]
+        EV -->|"settles on-chain"| SET[Settlement Record]
+    end
+
+    style OLD fill:#1a0a0a,stroke:#ff4444,stroke-width:2px,color:#ff6666
+    style NEW fill:#0a1a0a,stroke:#44ff44,stroke-width:2px,color:#66ff66
+    style R1 fill:#331111,stroke:#ff4444,color:#ff6666
+    style SET fill:#113311,stroke:#44ff44,color:#66ff66
+    style A1 fill:#2d1b1b,stroke:#ff6b6b,color:#ffaaaa
+    style A2 fill:#1b2d1b,stroke:#6bff6b,color:#aaffaa
+    style ACC fill:#1b2d1b,stroke:#6bff6b,color:#aaffaa

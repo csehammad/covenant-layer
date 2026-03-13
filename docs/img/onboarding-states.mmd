@@ -1,0 +1,27 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'lineColor': '#58a6ff', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'edgeLabelBackground': '#161b22'}}}%%
+
+stateDiagram-v2
+    direction LR
+    [*] --> requested
+    requested --> identity_verified: identity checks pass
+    identity_verified --> conformance_passed: schema + signature + profile pass
+    conformance_passed --> probation: governance admission
+    probation --> active: reliability threshold met
+    active --> restricted: policy violation or risk event
+    restricted --> active: remediation accepted
+    restricted --> revoked: severe or repeated failure
+    revoked --> [*]
+
+    classDef early fill:#1e293b,stroke:#64748b,color:#94a3b8
+    classDef mid fill:#172554,stroke:#818cf8,color:#c4b5fd
+    classDef good fill:#052e16,stroke:#4ade80,color:#bbf7d0
+    classDef warn fill:#451a03,stroke:#f59e0b,color:#fde68a
+    classDef bad fill:#450a0a,stroke:#f87171,color:#fecaca
+
+    class requested early
+    class identity_verified early
+    class conformance_passed mid
+    class probation mid
+    class active good
+    class restricted warn
+    class revoked bad

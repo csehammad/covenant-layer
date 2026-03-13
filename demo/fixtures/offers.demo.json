@@ -1,0 +1,55 @@
+{
+  "offers": [
+    {
+      "offer_id": "ofr_demo_alpha_001",
+      "provider_id": "provider.demo.alpha",
+      "objective_id": "obj_demo_flight_001",
+      "terms": {
+        "price_usd": 2315,
+        "stops": 0,
+        "overnight_layover": false,
+        "cabin": "premium_economy",
+        "refund_flexibility_score": 0.65,
+        "hold_minutes": 18
+      },
+      "expires_at": "2026-05-10T10:15:00Z",
+      "acceptance_conditions": {
+        "approval_required": true
+      }
+    },
+    {
+      "offer_id": "ofr_demo_bravo_001",
+      "provider_id": "provider.demo.bravo",
+      "objective_id": "obj_demo_flight_001",
+      "terms": {
+        "price_usd": 1940,
+        "stops": 1,
+        "overnight_layover": false,
+        "cabin": "economy_plus",
+        "refund_flexibility_score": 0.88,
+        "hold_minutes": 35
+      },
+      "expires_at": "2026-05-10T10:20:00Z",
+      "acceptance_conditions": {
+        "approval_required": true
+      }
+    },
+    {
+      "offer_id": "ofr_demo_charlie_001",
+      "provider_id": "provider.demo.charlie",
+      "objective_id": "obj_demo_flight_001",
+      "terms": {
+        "price_usd": 2480,
+        "stops": 1,
+        "overnight_layover": false,
+        "cabin": "business",
+        "refund_flexibility_score": 0.55,
+        "hold_minutes": 22
+      },
+      "expires_at": "2026-05-10T10:18:00Z",
+      "acceptance_conditions": {
+        "approval_required": true
+      }
+    }
+  ]
+}

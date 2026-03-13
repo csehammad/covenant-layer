@@ -1,0 +1,34 @@
+{
+  "agent.demo.orchestrator": {
+    "register": "0xSIGNED_REGISTER_TX_AGENT",
+    "identity_verified": "0xSIGNED_TX_AGENT_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_AGENT_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_AGENT_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_AGENT_PROBATION",
+    "active": "0xSIGNED_TX_AGENT_ACTIVE"
+  },
+  "provider.demo.alpha": {
+    "register": "0xSIGNED_REGISTER_TX_PROVIDER_ALPHA",
+    "identity_verified": "0xSIGNED_TX_PROVIDER_ALPHA_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_PROVIDER_ALPHA_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_PROVIDER_ALPHA_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_PROVIDER_ALPHA_PROBATION",
+    "active": "0xSIGNED_TX_PROVIDER_ALPHA_ACTIVE"
+  },
+  "provider.demo.bravo": {
+    "register": "0xSIGNED_REGISTER_TX_PROVIDER_BRAVO",
+    "identity_verified": "0xSIGNED_TX_PROVIDER_BRAVO_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_PROVIDER_BRAVO_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_PROVIDER_BRAVO_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_PROVIDER_BRAVO_PROBATION",
+    "active": "0xSIGNED_TX_PROVIDER_BRAVO_ACTIVE"
+  },
+  "provider.demo.charlie": {
+    "register": "0xSIGNED_REGISTER_TX_PROVIDER_CHARLIE",
+    "identity_verified": "0xSIGNED_TX_PROVIDER_CHARLIE_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_PROVIDER_CHARLIE_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_PROVIDER_CHARLIE_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_PROVIDER_CHARLIE_PROBATION",
+    "active": "0xSIGNED_TX_PROVIDER_CHARLIE_ACTIVE"
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "envelopes": [
+    {
+      "object_type": "objective",
+      "object_version": "1.0",
+      "object_id": "env_objective_demo_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "agent.demo.orchestrator",
+      "payload": {
+        "objective_id": "obj_demo_flight_001",
+        "principal_id": "user.demo",
+        "target_outcome": {
+          "origin": "JFK",
+          "destination": "CDG",
+          "departure_date": "2026-05-21"
+        },
+        "constraints": {
+          "max_budget_usd": 2500,
+          "cabin_class": "business_or_premium_economy",
+          "max_stops": 1,
+          "no_overnight_layover": true
+        },
+        "expiry": "2026-05-10T23:59:59Z"
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:29e2357b3a2e19eb4f85bfd6da226a73bd56297f8619f9d99267ea82a16c4a4f",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "agent-demo-ed25519-2026-q1",
+          "value": "lrYOTE0CZvfHMm-8xRH7dHoVNBVOuHvBAhf1zpzoBEk="
+        }
+      }
+    },
+    {
+      "object_type": "offer",
+      "object_version": "1.0",
+      "object_id": "env_ofr_demo_alpha_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "provider.demo.alpha",
+      "payload": {
+        "offer_id": "ofr_demo_alpha_001",
+        "provider_id": "provider.demo.alpha",
+        "objective_id": "obj_demo_flight_001",
+        "terms": {
+          "price_usd": 2315,
+          "stops": 0,
+          "overnight_layover": false,
+          "cabin": "premium_economy",
+          "refund_flexibility_score": 0.65,
+          "hold_minutes": 18
+        },
+        "expires_at": "2026-05-10T10:15:00Z",
+        "acceptance_conditions": {
+          "approval_required": true
+        }
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:7492155b2d207a98096df818a30db61fc685a7a60957eaf953a4d3bf286e545d",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "provider-demo-alpha-kid",
+          "value": "snNcvCKfin4duwAmabZqNi8SBGT-wZCj_pW0IKdO968="
+        }
+      }
+    },
+    {
+      "object_type": "offer",
+      "object_version": "1.0",
+      "object_id": "env_ofr_demo_bravo_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "provider.demo.bravo",
+      "payload": {
+        "offer_id": "ofr_demo_bravo_001",
+        "provider_id": "provider.demo.bravo",
+        "objective_id": "obj_demo_flight_001",
+        "terms": {
+          "price_usd": 1940,
+          "stops": 1,
+          "overnight_layover": false,
+          "cabin": "economy_plus",
+          "refund_flexibility_score": 0.88,
+          "hold_minutes": 35
+        },
+        "expires_at": "2026-05-10T10:20:00Z",
+        "acceptance_conditions": {
+          "approval_required": true
+        }
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:0ba1c7793704db504b22292acfbbd1e69bf2b20d728186fc3e357022b7d5bc1c",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "provider-demo-bravo-kid",
+          "value": "8tWyC4yuVCDv58uTlq_halFHoBqWCUFhBTbc_XPEX9U="
+        }
+      }
+    },
+    {
+      "object_type": "offer",
+      "object_version": "1.0",
+      "object_id": "env_ofr_demo_charlie_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "provider.demo.charlie",
+      "payload": {
+        "offer_id": "ofr_demo_charlie_001",
+        "provider_id": "provider.demo.charlie",
+        "objective_id": "obj_demo_flight_001",
+        "terms": {
+          "price_usd": 2480,
+          "stops": 1,
+          "overnight_layover": false,
+          "cabin": "business",
+          "refund_flexibility_score": 0.55,
+          "hold_minutes": 22
+        },
+        "expires_at": "2026-05-10T10:18:00Z",
+        "acceptance_conditions": {
+          "approval_required": true
+        }
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:5f3366a7bb25763f2fb927123228d0a066a0fd36e391aa4a94d8c92e29282ebc",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "provider-demo-charlie-kid",
+          "value": "yI3pQJdfVljaW15dl3xRfyB7a90qPWoUoJwN2COlr_g="
+        }
+      }
+    },
+    {
+      "object_type": "acceptance",
+      "object_version": "1.0",
+      "object_id": "env_acceptance_demo_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "agent.demo.orchestrator",
+      "payload": {
+        "acceptance_id": "acc_demo_001",
+        "offer_id": "ofr_demo_bravo_001",
+        "accepted_by": "agent.demo.orchestrator",
+        "accepted_at": "2026-03-12T21:18:37Z",
+        "approval_ref": "approval_demo_001"
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:228566271b4159f3ac3487b089e06e3828431f1274bb570568e52b7448b27821",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "agent-demo-ed25519-2026-q1",
+          "value": "kqUpJ5--VIrIUOWh0ZPtYRY2Q_CMMoKfEOl207dYKsc="
+        }
+      }
+    },
+    {
+      "object_type": "evidence_record",
+      "object_version": "1.0",
+      "object_id": "env_evidence_demo_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "provider.demo.bravo",
+      "payload": {
+        "evidence_id": "evd_demo_001",
+        "commitment_ref": "acc_demo_001",
+        "submitted_by": "provider.demo.bravo",
+        "evidence_type": "booking_confirmation",
+        "evidence_ref": "urn:demo:evidence:booking_confirmation:001",
+        "submitted_at": "2026-03-12T21:18:37Z"
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:1b04de876edd5ff3c1aeddeb2e086df281f2748445d7ad6618cccd0747c4da29",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "provider-demo-bravo-kid",
+          "value": "2xylhNblnEvgbwdtqqAUxS2QdmQMbJ2SjAzCKmUK7_U="
+        }
+      }
+    },
+    {
+      "object_type": "settlement_receipt",
+      "object_version": "1.0",
+      "object_id": "env_settlement_demo_001",
+      "issued_at": "2026-03-12T21:18:37Z",
+      "issuer_id": "settlement.demo.service",
+      "payload": {
+        "receipt_id": "set_demo_001",
+        "commitment_ref": "acc_demo_001",
+        "state": "fulfilled",
+        "recorded_at": "2026-03-12T21:18:37Z",
+        "evidence_refs": [
+          "evd_demo_001"
+        ]
+      },
+      "integrity": {
+        "canonicalization": "jcs-rfc8785",
+        "hash_alg": "sha256",
+        "hash": "sha256:2426a0b4037ffbbb8b8a774f25735bcba22a92c786f2bf5e72109045f1ccfdaf",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "settlement-demo-ed25519-2026-q1",
+          "value": "EsCdN_C8kDTm4UTSgMfZo8-3VBoPMBtnudL_xyTxgcg="
+        }
+      }
+    }
+  ]
+}

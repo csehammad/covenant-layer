@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Covenant Layer Demo Timeline</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.5; background: #f8fafc; color: #0f172a; }
+    h1, h2 { margin: 0 0 10px 0; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 12px 0; }
+    code { background: #eef2ff; padding: 2px 6px; border-radius: 6px; }
+    .ok { color: #166534; font-weight: 600; }
+    pre { background: #0b1020; color: #e2e8f0; padding: 12px; border-radius: 8px; overflow: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; border-bottom: 1px solid #e2e8f0; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Chain-Only E2E Demo Timeline</h1>
+  <p>Artifact source: <code>demo/artifacts/demo.full.json</code></p>
+
+  <div class="card">
+    <h2>Flow Overview</h2>
+    <div class="mermaid">
+flowchart LR
+    agentJoin[agent_service_active] --> objectivePub[objective_published]
+    objectivePub --> providerA[provider_alpha_offer]
+    objectivePub --> providerB[provider_bravo_offer]
+    objectivePub --> providerC[provider_charlie_offer]
+    providerA --> compareOffers[offer_comparison]
+    providerB --> compareOffers
+    providerC --> compareOffers
+    compareOffers --> acceptance[offer_accepted]
+    acceptance --> providerExec[provider_fulfillment]
+    providerExec --> evidenceRec[evidence_recorded]
+    evidenceRec --> settleRec[settlement_recorded]
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Onboarding Status</h2>
+    <table id="onboarding-table">
+      <thead><tr><th>Participant</th><th>Final State</th><th>Last Tx Hash</th><th>Last Block</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Offer Comparison</h2>
+    <table id="offers-table">
+      <thead><tr><th>Offer</th><th>Provider</th><th>Valid</th><th>Score</th><th>Price</th><th>Stops</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="selected-offer" class="ok"></p>
+  </div>
+
+  <div class="card">
+    <h2>Event Trail</h2>
+    <pre id="events"></pre>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "default" });
+
+    function safe(value, fallback = "-") {
+      return value === undefined || value === null ? fallback : value;
+    }
+
+    function parseParticipantFinal(participant) {
+      const steps = participant.steps || [];
+      let finalState = "unknown";
+      let txHash = "-";
+      let block = "-";
+      for (const step of steps) {
+        const out = step.output || {};
+        if (out.state) finalState = out.state;
+        if (out.last_tx_hash) txHash = out.last_tx_hash;
+        if (out.last_block !== undefined && out.last_block !== null) block = out.last_block;
+      }
+      return { finalState, txHash, block };
+    }
+
+    async function load() {
+      const res = await fetch("../demo/artifacts/demo.full.json", { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`Failed to load artifact: ${res.status}`);
+      }
+      const data = await res.json();
+      const onboarding = data.onboarding || {};
+      const objectiveFlow = data.objective_flow || {};
+
+      const onboardingBody = document.querySelector("#onboarding-table tbody");
+      for (const p of (onboarding.participants || [])) {
+        const final = parseParticipantFinal(p);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${safe(p.participant_id)}</td>
+          <td>${safe(final.finalState)}</td>
+          <td><code>${safe(final.txHash)}</code></td>
+          <td>${safe(final.block)}</td>
+        `;
+        onboardingBody.appendChild(row);
+      }
+
+      const offersBody = document.querySelector("#offers-table tbody");
+      for (const offer of (objectiveFlow.scored_offers || [])) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${safe(offer.offer_id)}</td>
+          <td>${safe(offer.provider_id)}</td>
+          <td>${safe(offer.valid)}</td>
+          <td>${safe(typeof offer.score === "number" ? offer.score.toFixed(4) : offer.score)}</td>
+          <td>${safe(offer.terms && offer.terms.price_usd)}</td>
+          <td>${safe(offer.terms && offer.terms.stops)}</td>
+        `;
+        offersBody.appendChild(row);
+      }
+
+      const selected = objectiveFlow.selected_offer || {};
+      document.getElementById("selected-offer").textContent =
+        `Selected Offer: ${safe(selected.offer_id)} from ${safe(selected.provider_id)} (score ${safe(selected.score)})`;
+
+      document.getElementById("events").textContent = JSON.stringify(objectiveFlow.events || [], null, 2);
+    }
+
+    load().catch((err) => {
+      document.getElementById("events").textContent = `Error: ${err.message}`;
+    });
+  </script>
+</body>
+</html>

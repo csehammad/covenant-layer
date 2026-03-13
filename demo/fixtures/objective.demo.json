@@ -1,0 +1,32 @@
+{
+  "objective_id": "obj_demo_flight_001",
+  "principal_id": "user.demo",
+  "objective_type": "book_flight",
+  "route": {
+    "origin": "JFK",
+    "destination": "CDG",
+    "departure_date": "2026-05-21"
+  },
+  "constraints": {
+    "max_budget_usd": 2500,
+    "cabin_class": "business_or_premium_economy",
+    "max_stops": 1,
+    "no_overnight_layover": true
+  },
+  "preferences": {
+    "prefer_nonstop": true,
+    "weight_price": 0.45,
+    "weight_convenience": 0.35,
+    "weight_refund_flexibility": 0.2
+  },
+  "approval_policy": {
+    "requires_explicit_approval": true,
+    "approval_reference": "approval_demo_001"
+  },
+  "expiry": "2026-05-10T23:59:59Z",
+  "comparison_policy": {
+    "ranking_version": "demo-v1",
+    "disqualify_if_budget_exceeded": true,
+    "disqualify_if_constraint_mismatch": true
+  }
+}
