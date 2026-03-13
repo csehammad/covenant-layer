@@ -6,8 +6,6 @@ The core idea: agents should not carry the full execution burden. They coordinat
 
 ## What this looks like
 
-Two examples show the contrast.
-
 ### Example 1: travel booking
 
 A user says:
@@ -32,12 +30,6 @@ In Covenant Layer, the request becomes an objective. Delivery providers return o
 
 Again, the agent coordinates a commitment instead of remote-controlling every step.
 
-<p align="center">
-  <img src="docs/img/old-vs-new.svg" alt="Old model vs Covenant model" width="100%"/>
-</p>
-
-Old model vs Covenant model: [`docs/img/old-vs-new.svg`](docs/img/old-vs-new.svg)
-
 ---
 
 ## How it works
@@ -61,10 +53,6 @@ The agent interprets intent, compares tradeoffs, applies policy, and gets approv
 
 The full lifecycle from user intent to settlement:
 
-<p align="center">
-  <img src="docs/img/request-to-settlement.svg" alt="Request to settlement flow" width="100%"/>
-</p>
-
 Request to settlement flow: [`docs/img/request-to-settlement.svg`](docs/img/request-to-settlement.svg)
 
 1. **User** states an objective with constraints, budget, and approval rules
@@ -83,10 +71,6 @@ The core unit is no longer the API call. It is the commitment.
 ---
 
 ## Layered architecture
-
-<p align="center">
-  <img src="docs/img/architecture-layers.svg" alt="Architecture layers" width="80%"/>
-</p>
 
 Architecture layers: [`docs/img/architecture-layers.svg`](docs/img/architecture-layers.svg)
 
@@ -110,10 +94,6 @@ This lets existing enterprise systems stay intact while becoming agent-native at
 
 ## Onboarding and trust
 
-<p align="center">
-  <img src="docs/img/onboarding-states.svg" alt="Onboarding state machine" width="100%"/>
-</p>
-
 Onboarding state machine: [`docs/img/onboarding-states.svg`](docs/img/onboarding-states.svg)
 
 Production traffic is not routed to participants simply because they exist. It is routed based on explicit admission state.
@@ -135,10 +115,6 @@ Trust is not implicit, and eligibility is not an ad hoc allowlist. It comes from
 ---
 
 ## Economics of commitment
-
-<p align="center">
-  <img src="docs/img/economics-loop.svg" alt="Economics loop" width="80%"/>
-</p>
 
 Economics loop: [`docs/img/economics-loop.svg`](docs/img/economics-loop.svg)
 
