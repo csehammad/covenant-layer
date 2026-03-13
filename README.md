@@ -1,28 +1,50 @@
 # Covenant Layer
 
-Open protocol and framework for shifting AI agent systems from **tool orchestration** to **outcome coordination**, with on-chain commitment infrastructure.
+Open protocol and framework for agent systems that coordinate outcomes instead of operating tools step by step, with on-chain commitment infrastructure.
 
-The central claim is that agents should not operate software step by step. They should coordinate commitments between participants who own fulfillment, stand behind results, and can prove what happened after acceptance.
+The core idea: agents should not carry the full execution burden. They coordinate commitments between participants who own fulfillment, stand behind results, and can prove what happened after acceptance.
+
+## What this looks like
+
+Two examples show the contrast.
+
+### Example 1: travel booking
+
+A user says:
+
+"Get me from New York to Paris next Thursday. Prefer nonstop if the price difference is reasonable. No overnight layovers. Show me the best two before booking."
+
+In the usual agent model, the agent has to call airline APIs, drive booking flows, compare options itself, and carry the execution path end to end.
+
+In Covenant Layer, the agent turns that request into an objective, sends it to eligible providers, compares returned offers, applies policy, gets approval, and accepts one. The provider then fulfills the booking in its own systems, submits evidence, and the outcome is settled.
+
+The agent handles intent, tradeoffs, and approval. The provider handles execution and accountability.
+
+### Example 2: last-mile delivery
+
+A user says:
+
+"Pick up this order from Store A and deliver it to this address by 2pm. Keep cold items refrigerated. Signature required."
+
+In the usual agent model, the agent has to orchestrate dispatch tools, store systems, routing APIs, and delivery confirmation flows itself.
+
+In Covenant Layer, the request becomes an objective. Delivery providers return offers with ETA, price, and terms. The agent compares them, applies policy, and accepts one. The provider fulfills in its own systems, submits proof of delivery, and the final state is recorded.
+
+Again, the agent coordinates a commitment instead of remote-controlling every step.
 
 <p align="center">
   <img src="docs/img/old-vs-new.svg" alt="Old model vs Covenant model" width="100%"/>
 </p>
 
-Old Model vs Covenant Model: [`docs/img/old-vs-new.svg`](docs/img/old-vs-new.svg)
-
-In the current model, the agent calls tools, automates browsers, stitches workflows, and carries the full execution burden.
-
-In the Covenant model, the agent publishes an objective, compares competing provider offers, accepts the best one under policy, and the provider fulfills the outcome in its own systems with evidence and settlement.
-
-This is a fundamental change in interface design for the agent era. The public surface stops being a collection of procedures and becomes a market of explicit commitments.
+Old model vs Covenant model: [`docs/img/old-vs-new.svg`](docs/img/old-vs-new.svg)
 
 ---
 
-## Overview
+## How it works
 
-Covenant Layer introduces a new systems boundary for AI-native coordination.
+Most agent systems assume the agent is a software operator. That works for demos. It breaks in workflows that are delegated, multi-step, policy-heavy, and expensive to get wrong. The hard problem is the gap between probabilistic reasoning and deterministic side effects.
 
-Instead of exposing only low-level methods to agents and asking them to execute correctly across arbitrary APIs, UIs, and workflows, Covenant Layer moves the edge interaction to:
+Covenant Layer moves the agent-facing interface from low-level methods to:
 
 - objective publication
 - offer discovery
@@ -31,37 +53,19 @@ Instead of exposing only low-level methods to agents and asking them to execute 
 - evidence-backed fulfillment
 - recorded settlement
 
-The result is a model that lets language systems stay close to intent, tradeoff analysis, policy, and approval, while deterministic execution remains with the providers that already own the operational stack.
-
-This does not mean APIs disappear. APIs, internal systems, queues, and automation remain critical. The shift is that they move down the stack into provider-owned fulfillment instead of being the primary public interface exposed to agents.
+The agent interprets intent, compares tradeoffs, applies policy, and gets approval. The provider performs fulfillment, produces evidence, and carries accountability. The network verifies identity, state, and settlement. APIs and internal systems stay; they move into provider-owned fulfillment instead of acting as the main interface exposed to agents.
 
 ---
 
-## Why This Matters
+## Request to settlement
 
-Modern agent systems are still largely built around one assumption: the agent is a software operator.
-
-That assumption works for demos and narrow tasks, but it becomes brittle in workflows that are delegated, multi-step, policy-heavy, and expensive to get wrong. In those environments, the hard problem is not just tool access. It is the gap between probabilistic reasoning and deterministic side effects.
-
-Covenant Layer addresses that gap by changing where responsibility lives:
-
-- the **agent** interprets intent, compares tradeoffs, applies policy, obtains approval, and monitors outcomes
-- the **provider** performs exact fulfillment, produces evidence, and carries accountability for mismatch
-- the **network** verifies identity, state, and settlement so that trust does not depend on one operator
-
-That shift is what makes the model important. It is not simply better packaging for APIs. It is a higher-order coordination interface designed for the reality of agent-mediated work.
-
----
-
-## Request To Settlement
+The full lifecycle from user intent to settlement:
 
 <p align="center">
   <img src="docs/img/request-to-settlement.svg" alt="Request to settlement flow" width="100%"/>
 </p>
 
-Request to Settlement Flow: [`docs/img/request-to-settlement.svg`](docs/img/request-to-settlement.svg)
-
-The full lifecycle from user intent to settlement:
+Request to settlement flow: [`docs/img/request-to-settlement.svg`](docs/img/request-to-settlement.svg)
 
 1. **User** states an objective with constraints, budget, and approval rules
 2. **Agent** carries delegated authority and publishes the objective
@@ -72,19 +76,19 @@ The full lifecycle from user intent to settlement:
 7. **Evidence** is submitted and independently verified
 8. **Settlement** is recorded as fulfilled, failed, refunded, disputed, or expired
 
-The critical boundary is **acceptance**. Before acceptance, offers are proposals. After valid acceptance, provider commitment is active, measurable, and enforceable within the network semantics.
+The critical boundary is acceptance. Before acceptance, offers are proposals. After valid acceptance, provider commitment is active, measurable, and enforceable within the network semantics.
 
-This is where the architecture becomes meaningful. The core unit is no longer the API call. It is the commitment.
+The core unit is no longer the API call. It is the commitment.
 
 ---
 
-## Layered Architecture
+## Layered architecture
 
 <p align="center">
   <img src="docs/img/architecture-layers.svg" alt="Architecture layers" width="80%"/>
 </p>
 
-Architecture Layers: [`docs/img/architecture-layers.svg`](docs/img/architecture-layers.svg)
+Architecture layers: [`docs/img/architecture-layers.svg`](docs/img/architecture-layers.svg)
 
 The model is intentionally layered:
 
@@ -100,17 +104,17 @@ Providers own the fulfillment layer, where exact execution belongs.
 
 The trust layer makes the handoff credible through bounded authority, verifiable identity, evidence, and explicit state transitions.
 
-This separation is what allows existing enterprise systems to remain intact while still becoming agent-native at the coordination layer.
+This lets existing enterprise systems stay intact while becoming agent-native at the coordination layer.
 
 ---
 
-## Onboarding And Trust
+## Onboarding and trust
 
 <p align="center">
   <img src="docs/img/onboarding-states.svg" alt="Onboarding state machine" width="100%"/>
 </p>
 
-Onboarding State Machine: [`docs/img/onboarding-states.svg`](docs/img/onboarding-states.svg)
+Onboarding state machine: [`docs/img/onboarding-states.svg`](docs/img/onboarding-states.svg)
 
 Production traffic is not routed to participants simply because they exist. It is routed based on explicit admission state.
 
@@ -124,35 +128,35 @@ Participants move through a trust gate:
 - `restricted`
 - `revoked`
 
-That state machine is operationally important. It prevents the network from treating "some endpoint on the internet" as equivalent to a verified participant with declared capabilities, signed manifests, conformance evidence, and bounded exposure history.
+That state machine matters operationally. It prevents the network from treating "some endpoint on the internet" as equivalent to a verified participant with declared capabilities, signed manifests, conformance evidence, and bounded exposure history.
 
-This is one of the strongest parts of the framework: trust is not implicit, and eligibility is not an ad hoc allowlist. It is derived from explicit state and published policy.
+Trust is not implicit, and eligibility is not an ad hoc allowlist. It comes from explicit state and published policy.
 
 ---
 
-## Economics Of Commitment
+## Economics of commitment
 
 <p align="center">
   <img src="docs/img/economics-loop.svg" alt="Economics loop" width="80%"/>
 </p>
 
-Economics Loop: [`docs/img/economics-loop.svg`](docs/img/economics-loop.svg)
+Economics loop: [`docs/img/economics-loop.svg`](docs/img/economics-loop.svg)
 
 Commitments only matter if failure has consequences and fulfillment has proof.
 
 The economic layer gives the network that credibility:
 
 - **Stake**: providers lock collateral at registration as a signal of seriousness
-- **Proof of Outcome**: evidence, verification, and settlement create a protocol-level record of what actually happened
+- **Proof of outcome**: evidence, verification, and settlement create a protocol-level record of what happened
 - **Graduated slashing**: honest failure, abandonment, and fraud are treated differently
 - **Fee markets**: routing and coordination are priced through competition rather than platform fiat
 - **Settlement-derived reputation**: track record comes from protocol-verified history, not ratings captured by one platform
 
-This is why the model is more than a messaging protocol. Without economics, commitments are suggestions. With stake, settlement, and reputation, they become a credible coordination primitive for real-world outcomes.
+Without economics, commitments are suggestions. With stake, settlement, and reputation, they become a credible coordination primitive for real-world outcomes.
 
 ---
 
-## Why Blockchain
+## Why blockchain
 
 The framework uses blockchain where shared trust boundaries matter and keeps operational detail off-chain where it belongs.
 
@@ -176,9 +180,9 @@ This hybrid model is deliberate. The chain anchors identity, status, stake, and 
 
 ---
 
-## Industry Adoption Path
+## Industry adoption path
 
-The practical industry path is not to discard existing APIs. It is to stop treating those APIs as the only agent-facing abstraction.
+The practical path is not to discard existing APIs. It is to stop treating those APIs as the only agent-facing abstraction.
 
 A realistic rollout looks like this:
 
@@ -188,7 +192,7 @@ A realistic rollout looks like this:
 4. Introduce signed onboarding, conformance gates, and probation for counterparties
 5. Anchor registry state and settlement in shared, auditable infrastructure
 
-That makes the model particularly strong in domains where users care less about which exact method was called and more about who committed to what outcome under which terms.
+This model is especially strong in domains where users care less about which exact method was called and more about who committed to what outcome under which terms.
 
 Examples include:
 
@@ -200,13 +204,13 @@ Examples include:
 - recruiting
 - enterprise operations
 
-In these environments, Covenant Layer reframes the agent not as a remote-control operator but as an authorized coordinator of outcomes.
+In these environments, the agent is not a remote-control operator. It is an authorized coordinator of outcomes.
 
 ---
 
 ## Demo
 
-A **chain-only E2E demo** implements the full lifecycle in a travel vertical for a JFK -> CDG booking flow.
+A chain-only E2E demo implements the full lifecycle in a travel vertical (JFK to CDG booking).
 
 | Participant | Role |
 |---|---|
@@ -258,14 +262,14 @@ See [`demo/README.md`](demo/README.md) for full details and the [`dry-run checkl
 
 ---
 
-## Project Components
+## Project components and quick start
 
 - **Covenant Layer**: the architectural shift from procedures to outcome coordination
 - **Covenant Network**: the ecosystem of agents, providers, brokers, verifiers, and settlement services
 - **Covenant Protocol**: the formal specification for objectives, authority, offers, acceptance, evidence, settlement, and disputes
 - **Covenant Framework**: the Rust + Solidity implementation for onboarding, conformance, registry state, and lifecycle operations
 
-## Repository Layout
+**Repository layout:**
 
 ```text
 spec/            protocol spec (8 chapters + JSON schema)
@@ -280,7 +284,7 @@ diagrams/        text diagrams
 - `demo/` contains participant manifests, fixtures, scripts, artifacts, validation, and the end-to-end walkthrough
 - `docs/` contains the architecture, mental model, network model, and security rationale
 
-## Quick Start
+**Quick start:**
 
 ```bash
 cd framework
@@ -301,6 +305,12 @@ make conformance-all
 Active draft and implementation.
 
 The protocol spec, onboarding framework, and chain-backed registry are functional. The goal is to make the model concrete enough to critique, implement, and improve as a serious coordination primitive for AI-native systems.
+
+---
+
+## Further reading
+
+- [The Future of Agents Is Outcome Coordination](https://levelup.gitconnected.com/the-future-of-agents-is-outcome-coordination-09807612ca2d) (GitConnected)
 
 ---
 
