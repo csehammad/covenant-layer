@@ -1,40 +1,53 @@
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'primaryBorderColor': '#555', 'lineColor': '#888', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'clusterBkg': '#161b22', 'titleColor': '#e0e0e0', 'edgeLabelBackground': '#161b22'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#eff6ff', 'primaryTextColor': '#0f172a', 'primaryBorderColor': '#2563eb', 'lineColor': '#475569', 'secondaryColor': '#f8fafc', 'tertiaryColor': '#eef2ff', 'clusterBkg': '#f8fafc', 'titleColor': '#0f172a', 'edgeLabelBackground': '#ffffff', 'fontSize': '18px', 'fontFamily': 'Inter, Arial, sans-serif' }}}%%
 
-graph TB
-    subgraph OLD["<b>Today: Agent as Software Operator</b>"]
+flowchart TB
+    subgraph OLD["Today: Agent as Software Operator"]
         direction TB
-        U1[User Intent] --> A1[AI Agent]
+        U1[User intent] --> A1[AI agent]
         A1 -->|"calls tools"| T1[Tool APIs]
         A1 -->|"automates"| B1[Browser UI]
-        A1 -->|"runs"| C1[Code Execution]
-        A1 -->|"stitches"| W1[Workflow Steps]
-        T1 --> S1[Side Effects]
+        A1 -->|"runs"| C1[Code execution]
+        A1 -->|"stitches"| W1[Workflow steps]
+        T1 --> S1[Side effects]
         B1 --> S1
         C1 --> S1
         W1 --> S1
-        S1 -->|"hope it worked"| R1[Result?]
+        S1 -->|"hope it worked"| R1[Result]
     end
 
-    subgraph NEW["<b>Covenant: Agent as Outcome Coordinator</b>"]
+    subgraph NEW["Covenant: Agent as Outcome Coordinator"]
         direction TB
-        U2[User Intent] --> A2[AI Agent]
-        A2 -->|"publishes objective"| BR[Broker / Exchange]
-        BR --> P1[Provider A Offer]
-        BR --> P2[Provider B Offer]
-        BR --> P3[Provider C Offer]
+        U2[User intent] --> A2[AI agent]
+        A2 -->|"publishes objective"| BR[Broker or exchange]
+        BR --> P1[Provider A offer]
+        BR --> P2[Provider B offer]
+        BR --> P3[Provider C offer]
         P1 --> A2
         P2 --> A2
         P3 --> A2
         A2 -->|"accepts best offer"| ACC[Acceptance]
-        ACC -->|"provider fulfills"| FUL[Provider Execution]
-        FUL -->|"submits evidence"| EV[Evidence + Verification]
-        EV -->|"settles on-chain"| SET[Settlement Record]
+        ACC -->|"provider fulfills"| FUL[Provider execution]
+        FUL -->|"submits evidence"| EV[Evidence and verification]
+        EV -->|"records settlement"| SET[Settlement record]
     end
 
-    style OLD fill:#1a0a0a,stroke:#ff4444,stroke-width:2px,color:#ff6666
-    style NEW fill:#0a1a0a,stroke:#44ff44,stroke-width:2px,color:#66ff66
-    style R1 fill:#331111,stroke:#ff4444,color:#ff6666
-    style SET fill:#113311,stroke:#44ff44,color:#66ff66
-    style A1 fill:#2d1b1b,stroke:#ff6b6b,color:#ffaaaa
-    style A2 fill:#1b2d1b,stroke:#6bff6b,color:#aaffaa
-    style ACC fill:#1b2d1b,stroke:#6bff6b,color:#aaffaa
+    style OLD fill:#fff1f2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+    style NEW fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d
+    style U1 fill:#ffffff,stroke:#94a3b8,color:#0f172a,stroke-width:1.5px
+    style A1 fill:#fee2e2,stroke:#ef4444,color:#7f1d1d,stroke-width:2px
+    style T1 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style B1 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style C1 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style W1 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style S1 fill:#fff7ed,stroke:#f97316,color:#9a3412,stroke-width:2px
+    style R1 fill:#fff1f2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px
+    style U2 fill:#ffffff,stroke:#94a3b8,color:#0f172a,stroke-width:1.5px
+    style A2 fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,stroke-width:2px
+    style BR fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:1.5px
+    style P1 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style P2 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style P3 fill:#ffffff,stroke:#94a3b8,color:#0f172a
+    style ACC fill:#fef3c7,stroke:#d97706,color:#92400e,stroke-width:2px
+    style FUL fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:1.5px
+    style EV fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:1.5px
+    style SET fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px

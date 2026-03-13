@@ -1,27 +1,18 @@
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'lineColor': '#58a6ff', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'edgeLabelBackground': '#161b22'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#eff6ff', 'primaryTextColor': '#0f172a', 'primaryBorderColor': '#2563eb', 'lineColor': '#475569', 'secondaryColor': '#f8fafc', 'tertiaryColor': '#eef2ff', 'clusterBkg': '#f8fafc', 'titleColor': '#0f172a', 'edgeLabelBackground': '#ffffff', 'fontSize': '18px', 'fontFamily': 'Inter, Arial, sans-serif' }}}%%
 
-stateDiagram-v2
-    direction LR
-    [*] --> requested
-    requested --> identity_verified: identity checks pass
-    identity_verified --> conformance_passed: schema + signature + profile pass
-    conformance_passed --> probation: governance admission
-    probation --> active: reliability threshold met
-    active --> restricted: policy violation or risk event
-    restricted --> active: remediation accepted
-    restricted --> revoked: severe or repeated failure
-    revoked --> [*]
+flowchart TB
+    requested[requested] -->|"identity checks pass"| identity_verified[identity_verified]
+    identity_verified -->|"schema, signature, and profile pass"| conformance_passed[conformance_passed]
+    conformance_passed -->|"governance admission"| probation[probation]
+    probation -->|"reliability threshold met"| active[active]
+    active -->|"policy violation or risk event"| restricted[restricted]
+    restricted -->|"remediation accepted"| active
+    restricted -->|"severe or repeated failure"| revoked[revoked]
 
-    classDef early fill:#1e293b,stroke:#64748b,color:#94a3b8
-    classDef mid fill:#172554,stroke:#818cf8,color:#c4b5fd
-    classDef good fill:#052e16,stroke:#4ade80,color:#bbf7d0
-    classDef warn fill:#451a03,stroke:#f59e0b,color:#fde68a
-    classDef bad fill:#450a0a,stroke:#f87171,color:#fecaca
-
-    class requested early
-    class identity_verified early
-    class conformance_passed mid
-    class probation mid
-    class active good
-    class restricted warn
-    class revoked bad
+    style requested fill:#ffffff,stroke:#94a3b8,color:#334155,stroke-width:1.5px
+    style identity_verified fill:#ffffff,stroke:#94a3b8,color:#334155,stroke-width:1.5px
+    style conformance_passed fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:2px
+    style probation fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:2px
+    style active fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
+    style restricted fill:#fef3c7,stroke:#d97706,color:#92400e,stroke-width:2px
+    style revoked fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px

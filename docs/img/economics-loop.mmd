@@ -1,24 +1,24 @@
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'lineColor': '#58a6ff', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'edgeLabelBackground': '#161b22'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#eff6ff', 'primaryTextColor': '#0f172a', 'primaryBorderColor': '#2563eb', 'lineColor': '#475569', 'secondaryColor': '#f8fafc', 'tertiaryColor': '#eef2ff', 'clusterBkg': '#f8fafc', 'titleColor': '#0f172a', 'edgeLabelBackground': '#ffffff', 'fontSize': '18px', 'fontFamily': 'Inter, Arial, sans-serif' }}}%%
 
 flowchart TB
-    REG["<b>Register + Stake</b><br/>provider locks collateral"] --> COM["<b>Commit</b><br/>accept objective, terms bind"]
-    COM --> FUL["<b>Fulfill</b><br/>provider-owned execution"]
-    FUL --> EV["<b>Evidence</b><br/>signed proof artifacts"]
-    EV --> VER["<b>Verify</b><br/>independent integrity check"]
-    VER --> SET["<b>Settle On-Chain</b><br/>fulfilled · failed · disputed"]
-    SET --> REP["<b>Reputation</b><br/>derived from settlement history"]
-    REP --> ROUTE["<b>Routing Priority</b><br/>better reputation = more flow"]
+    REG["Register and stake<br/>provider locks collateral"] --> COM["Commit<br/>accept objective, terms bind"]
+    COM --> FUL["Fulfill<br/>provider-owned execution"]
+    FUL --> EV["Evidence<br/>signed proof artifacts"]
+    EV --> VER["Verify<br/>independent integrity check"]
+    VER --> SET["Settle on-chain<br/>fulfilled, failed, or disputed"]
+    SET --> REP["Reputation<br/>derived from settlement history"]
+    REP --> ROUTE["Routing priority<br/>better reputation, more flow"]
     ROUTE --> COM
 
-    SET -->|"failure"| SLASH["<b>Slash</b><br/>graduated penalty"]
+    SET -->|"failure"| SLASH["Slash<br/>graduated penalty"]
     SLASH -->|"stake reduced"| REG
 
-    style REG fill:#172554,stroke:#60a5fa,color:#93c5fd,stroke-width:2px
-    style COM fill:#172554,stroke:#818cf8,color:#c4b5fd,stroke-width:2px
-    style FUL fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
-    style EV fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
-    style VER fill:#1e293b,stroke:#818cf8,color:#c4b5fd,stroke-width:1px
-    style SET fill:#052e16,stroke:#4ade80,color:#bbf7d0,stroke-width:3px
-    style REP fill:#1c1917,stroke:#facc15,color:#fef08a,stroke-width:2px
-    style ROUTE fill:#1c1917,stroke:#facc15,color:#fef08a,stroke-width:2px
-    style SLASH fill:#450a0a,stroke:#f87171,color:#fecaca,stroke-width:2px
+    style REG fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:2px
+    style COM fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:2px
+    style FUL fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px
+    style EV fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:1.5px
+    style VER fill:#ffffff,stroke:#94a3b8,color:#334155,stroke-width:1.5px
+    style SET fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
+    style REP fill:#fef3c7,stroke:#d97706,color:#92400e,stroke-width:2px
+    style ROUTE fill:#fef3c7,stroke:#d97706,color:#92400e,stroke-width:2px
+    style SLASH fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px

@@ -1,47 +1,13 @@
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'lineColor': '#888', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'edgeLabelBackground': '#161b22'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#eff6ff', 'primaryTextColor': '#0f172a', 'primaryBorderColor': '#2563eb', 'lineColor': '#475569', 'secondaryColor': '#f8fafc', 'tertiaryColor': '#eef2ff', 'clusterBkg': '#f8fafc', 'titleColor': '#0f172a', 'edgeLabelBackground': '#ffffff', 'fontSize': '18px', 'fontFamily': 'Inter, Arial, sans-serif' }}}%%
 
-block-beta
-    columns 1
-    block:L5:1
-        columns 3
-        space:1
-        L5T["<b>Layer 5: User Intent</b><br/>goals · preferences · budget · constraints · approval rules"]
-        space:1
-    end
-    block:L4:1
-        columns 3
-        space:1
-        L4T["<b>Layer 4: Coordination</b><br/>objectives · offers · acceptance · commitments · settlement"]
-        space:1
-    end
-    block:L3:1
-        columns 3
-        space:1
-        L3T["<b>Layer 3: Trust</b><br/>authority · identity · evidence · receipts · disputes"]
-        space:1
-    end
-    block:L2:1
-        columns 3
-        space:1
-        L2T["<b>Layer 2: Fulfillment</b><br/>provider execution · booking · payment · issuance"]
-        space:1
-    end
-    block:L1:1
-        columns 3
-        space:1
-        L1T["<b>Layer 1: Infrastructure</b><br/>HTTP · queues · logs · internal APIs · chain registry"]
-        space:1
-    end
+flowchart TB
+    L5["Layer 5: User intent<br/>goals, preferences, budget, constraints, approval rules"] --> L4["Layer 4: Coordination<br/>objectives, offers, acceptance, commitments, settlement"]
+    L4 --> L3["Layer 3: Trust<br/>authority, identity, evidence, receipts, disputes"]
+    L3 --> L2["Layer 2: Fulfillment<br/>provider execution, booking, payment, issuance"]
+    L2 --> L1["Layer 1: Infrastructure<br/>HTTP, queues, logs, internal APIs, chain registry"]
 
-    L5 --> L4 --> L3 --> L2 --> L1
-
-    style L5 fill:#1e3a5f,stroke:#60a5fa,color:#e0e0e0,stroke-width:2px
-    style L4 fill:#1e3a5f,stroke:#a78bfa,color:#e0e0e0,stroke-width:3px
-    style L3 fill:#1e3a5f,stroke:#facc15,color:#e0e0e0,stroke-width:2px
-    style L2 fill:#1e3a5f,stroke:#64748b,color:#e0e0e0,stroke-width:1px
-    style L1 fill:#1e3a5f,stroke:#475569,color:#e0e0e0,stroke-width:1px
-    style L5T fill:#0d1117,stroke:#60a5fa,color:#93c5fd
-    style L4T fill:#0d1117,stroke:#a78bfa,color:#c4b5fd
-    style L3T fill:#0d1117,stroke:#facc15,color:#fef08a
-    style L2T fill:#0d1117,stroke:#64748b,color:#94a3b8
-    style L1T fill:#0d1117,stroke:#475569,color:#94a3b8
+    style L5 fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:2px
+    style L4 fill:#eef2ff,stroke:#6366f1,color:#3730a3,stroke-width:2px
+    style L3 fill:#fef3c7,stroke:#d97706,color:#92400e,stroke-width:2px
+    style L2 fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px
+    style L1 fill:#ffffff,stroke:#94a3b8,color:#334155,stroke-width:1.5px
