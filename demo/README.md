@@ -74,7 +74,37 @@ Generated artifacts:
 - `demo/artifacts/onboarding.demo.json`
 - `demo/artifacts/objective-flow.demo.json` — includes `agent_reasoning` block with model output, reasoning trace, and confidence
 - `demo/artifacts/protocol-envelopes.demo.json`
+- `demo/artifacts/dispute-flow.demo.json` — terms-mismatch dispute + refund resolution
 - `demo/artifacts/demo.full.json`
+
+### Dispute lifecycle (v0.2.0)
+
+The demo includes a non-happy-path: provider Charlie's `business` offer is
+accepted, but the fulfillment receipt shows `premium_economy`. The agent opens a
+`terms_mismatch` dispute, the verifier compares the accepted offer against the
+receipt, and the settlement service records `refunded`.
+
+This flow runs fully offline (it exercises the framework dispute lifecycle via
+the CLI in local mode):
+
+```bash
+python3 demo/scripts/run_dispute_flow.py
+python3 demo/scripts/validate_dispute.py   # expects DISPUTE_VALIDATION_OK
+```
+
+The settlement state trail is `fulfilled -> disputed -> refunded`, and the
+generated protocol envelopes include `dispute_record`, `dispute_resolution`, and
+a final `settlement_receipt` with state `refunded`.
+
+### Automated tests
+
+The dispute demo layer has a Python test suite under `demo/tests/` (schema
+validation + an end-to-end offline flow test). See `demo/tests/README.md`.
+
+```bash
+python3 -m pip install -r demo/tests/requirements.txt
+python3 -m unittest discover -s demo/tests -v
+```
 
 ## 4) View visualization
 

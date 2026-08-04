@@ -35,6 +35,10 @@ flowchart LR
     acceptance --> providerExec[provider_fulfillment]
     providerExec --> evidenceRec[evidence_recorded]
     evidenceRec --> settleRec[settlement_recorded]
+    settleRec --> disputeOpened["dispute_opened (terms_mismatch)"]
+    disputeOpened --> verifierReview[verifier_review]
+    verifierReview --> disputeResolved["dispute_resolved (refunded)"]
+    disputeResolved --> settleRefunded["settlement_recorded (refunded)"]
     </div>
   </div>
 
@@ -53,6 +57,16 @@ flowchart LR
       <tbody></tbody>
     </table>
     <p id="selected-offer" class="ok"></p>
+  </div>
+
+  <div class="card">
+    <h2>Dispute Resolution</h2>
+    <p id="dispute-summary">No dispute flow recorded.</p>
+    <table id="dispute-evidence-table" style="display:none">
+      <thead><tr><th>Evidence Type</th><th>Digest</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="settlement-trail"></p>
   </div>
 
   <div class="card">
@@ -121,7 +135,32 @@ flowchart LR
       document.getElementById("selected-offer").textContent =
         `Selected Offer: ${safe(selected.offer_id)} from ${safe(selected.provider_id)} (score ${safe(selected.score)})`;
 
-      document.getElementById("events").textContent = JSON.stringify(objectiveFlow.events || [], null, 2);
+      const disputeFlow = data.dispute_flow || {};
+      const dispute = disputeFlow.dispute || {};
+      const resolution = disputeFlow.resolution || {};
+      if (dispute.dispute_id) {
+        document.getElementById("dispute-summary").innerHTML =
+          `Dispute <code>${safe(dispute.dispute_id)}</code> raised by ` +
+          `<code>${safe(dispute.raised_by)}</code> — reason <code>${safe(dispute.reason_code)}</code>. ` +
+          `Resolved as <span class="ok">${safe(resolution.decision)}</span> by ` +
+          `<code>${safe(resolution.resolved_by)}</code>.`;
+
+        const evTable = document.getElementById("dispute-evidence-table");
+        const evBody = evTable.querySelector("tbody");
+        for (const ref of (dispute.evidence_refs || [])) {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${safe(ref.type)}</td><td><code>${safe(ref.digest)}</code></td>`;
+          evBody.appendChild(row);
+        }
+        if ((dispute.evidence_refs || []).length > 0) evTable.style.display = "table";
+
+        const trail = (disputeFlow.settlement_state_trail || []).join(" -> ");
+        document.getElementById("settlement-trail").textContent =
+          trail ? `Settlement state trail: ${trail}` : "";
+      }
+
+      const combinedEvents = (objectiveFlow.events || []).concat(disputeFlow.events || []);
+      document.getElementById("events").textContent = JSON.stringify(combinedEvents, null, 2);
     }
 
     load().catch((err) => {

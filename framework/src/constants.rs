@@ -20,3 +20,14 @@ pub fn allowed_targets(from: &str) -> &'static [&'static str] {
         _ => &[],
     }
 }
+
+/// Settlement states a commitment may be in for a dispute to be opened.
+///
+/// Reason codes and resolution decisions live in [`crate::domain`] as typed
+/// enums; disputable states remain a string set because settlement state is a
+/// broader vocabulary shared with the (stringly-typed) commitment record.
+pub const DISPUTABLE_SETTLEMENT_STATES: &[&str] = &["fulfilled", "failed", "settled"];
+
+pub fn is_disputable_state(state: &str) -> bool {
+    DISPUTABLE_SETTLEMENT_STATES.contains(&state)
+}

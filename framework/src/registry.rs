@@ -1,46 +1,20 @@
 use crate::constants::allowed_targets;
+use crate::ledger::{sha256_hex, tx_hash};
 use crate::manifest::{
     compute_manifest_hash, load_manifest, manifest_field_string, validate_manifest,
 };
 use crate::models::{Attestation, ParticipantRecord};
 use crate::store::{load_state, next_block, save_state, utc_now};
 use serde_json::json;
-use sha2::{Digest, Sha256};
 
-#[derive(Debug, Clone)]
-pub struct WriteContext {
-    pub source: String,
-    pub tx_hash: String,
-    pub block: u64,
-    pub network: Option<String>,
-    pub chain_id: Option<u64>,
-    pub contract: Option<String>,
-}
-
-fn sha256_hex(input: &str) -> String {
-    let mut hasher = Sha256::new();
-    hasher.update(input.as_bytes());
-    format!("{:x}", hasher.finalize())
-}
-
-fn tx_hash(seed: &str) -> String {
-    format!("0x{}", &sha256_hex(seed)[..32])
-}
+pub use crate::ledger::WriteContext;
 
 pub fn register_participant(
     manifest_path: &str,
     owner: &str,
     stake: f64,
 ) -> Result<ParticipantRecord, String> {
-    let local = WriteContext {
-        source: "local".to_string(),
-        tx_hash: String::new(),
-        block: 0,
-        network: None,
-        chain_id: None,
-        contract: None,
-    };
-    register_participant_with_context(manifest_path, owner, stake, &local)
+    register_participant_with_context(manifest_path, owner, stake, &WriteContext::local())
 }
 
 pub fn register_participant_with_context(
@@ -124,15 +98,7 @@ pub fn transition_participant(
     to_state: &str,
     reason: &str,
 ) -> Result<ParticipantRecord, String> {
-    let local = WriteContext {
-        source: "local".to_string(),
-        tx_hash: String::new(),
-        block: 0,
-        network: None,
-        chain_id: None,
-        contract: None,
-    };
-    transition_participant_with_context(participant_id, to_state, reason, &local)
+    transition_participant_with_context(participant_id, to_state, reason, &WriteContext::local())
 }
 
 pub fn transition_participant_with_context(
@@ -204,15 +170,7 @@ pub fn add_attestation(
     kind: &str,
     details: serde_json::Value,
 ) -> Result<Attestation, String> {
-    let local = WriteContext {
-        source: "local".to_string(),
-        tx_hash: String::new(),
-        block: 0,
-        network: None,
-        chain_id: None,
-        contract: None,
-    };
-    add_attestation_with_context(participant_id, kind, details, &local)
+    add_attestation_with_context(participant_id, kind, details, &WriteContext::local())
 }
 
 pub fn add_attestation_with_context(

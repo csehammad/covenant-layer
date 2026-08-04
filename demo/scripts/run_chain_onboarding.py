@@ -79,6 +79,18 @@ def main() -> int:
             "owner": env_required("DEMO_PROVIDER_CHARLIE_OWNER"),
             "stake": stake_provider,
         },
+        {
+            "participant_id": "verifier.demo.audit",
+            "manifest": MANIFEST_DIR / "verifier.demo.yaml",
+            "owner": env_required("DEMO_VERIFIER_OWNER"),
+            "stake": stake_provider,
+        },
+        {
+            "participant_id": "settlement.demo.service",
+            "manifest": MANIFEST_DIR / "settlement-service.demo.yaml",
+            "owner": env_required("DEMO_SETTLEMENT_OWNER"),
+            "stake": stake_provider,
+        },
     ]
 
     ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)

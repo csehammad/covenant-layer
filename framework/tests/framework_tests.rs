@@ -1,8 +1,14 @@
 use covenant_framework::chain::execute_registry_action;
 use covenant_framework::config::NetworkDefinition;
 use covenant_framework::conformance::run_conformance;
-use covenant_framework::contracts::register_action;
+use covenant_framework::contracts::{open_dispute_action, register_action};
+use covenant_framework::dispute::{
+    append_dispute_evidence, get_dispute, open_dispute, record_commitment, resolve_dispute,
+    OpenDispute, RecordCommitment,
+};
+use covenant_framework::domain::{DisputeStatus, ReasonCode, ResolutionDecision};
 use covenant_framework::manifest::{sign_manifest, verify_manifest_signature};
+use covenant_framework::models::EvidenceRef;
 use covenant_framework::registry::{get_participant, register_participant, transition_participant};
 use covenant_framework::store::{init_state, save_state, state_path};
 use serde_yaml::Value;
@@ -494,4 +500,305 @@ fn detached_signature_roundtrip_succeeds() {
         Path::new(&signature_path).exists(),
         "signature file should be created"
     );
+}
+
+fn sample_evidence() -> Vec<EvidenceRef> {
+    vec![
+        EvidenceRef {
+            r#type: "accepted_offer".to_string(),
+            digest: format!("sha256:{}", "a".repeat(64)),
+        },
+        EvidenceRef {
+            r#type: "provider_receipt".to_string(),
+            digest: format!("sha256:{}", "b".repeat(64)),
+        },
+    ]
+}
+
+fn resolution_evidence() -> Vec<EvidenceRef> {
+    vec![EvidenceRef {
+        r#type: "verifier_report".to_string(),
+        digest: format!("sha256:{}", "c".repeat(64)),
+    }]
+}
+
+const FUTURE_DEADLINE: &str = "2999-01-01T00:00:00Z";
+const PAST_DEADLINE: &str = "2000-01-01T00:00:00Z";
+
+fn seed_commitment(commitment_ref: &str) {
+    record_commitment(&RecordCommitment {
+        commitment_ref,
+        objective_ref: "obj_test_001",
+        offer_id: "ofr_test_001",
+        accepted_by: "agent.test.orchestrator",
+        provider_id: "provider.test.charlie",
+        assigned_verifier: "verifier.test",
+        settlement_authority: "settlement.test.service",
+        settlement_state: "fulfilled",
+    })
+    .expect("record commitment");
+}
+
+#[test]
+fn dispute_happy_path_record_open_resolve() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+
+    seed_commitment("cmt_happy_001");
+    let dispute = open_dispute(OpenDispute {
+        commitment_ref: "cmt_happy_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: Some("cabin mismatch".to_string()),
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    })
+    .expect("open dispute");
+    assert_eq!(dispute.status, DisputeStatus::Open);
+    assert_eq!(dispute.reason_code, ReasonCode::TermsMismatch);
+
+    let resolved = resolve_dispute(
+        &dispute.dispute_id,
+        "refunded",
+        "verifier.test",
+        resolution_evidence(),
+    )
+    .expect("resolve dispute");
+    assert_eq!(resolved.status, DisputeStatus::Resolved);
+    let resolution = resolved.resolution.expect("resolution present");
+    assert_eq!(resolution.decision, ResolutionDecision::Refunded);
+    assert_eq!(resolution.settlement_state, ResolutionDecision::Refunded);
+}
+
+#[test]
+fn dispute_open_rejected_for_non_party() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_party_001");
+
+    let result = open_dispute(OpenDispute {
+        commitment_ref: "cmt_party_001",
+        raised_by: "stranger.outsider",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    });
+    assert!(result.is_err(), "non-party open should be rejected");
+    assert!(result.unwrap_err().to_string().contains("not a party"));
+}
+
+#[test]
+fn dispute_open_rejected_when_not_disputable() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    record_commitment(&RecordCommitment {
+        commitment_ref: "cmt_state_001",
+        objective_ref: "obj",
+        offer_id: "ofr",
+        accepted_by: "agent.test.orchestrator",
+        provider_id: "provider.test.charlie",
+        assigned_verifier: "verifier.test",
+        settlement_authority: "settlement.test.service",
+        settlement_state: "refunded",
+    })
+    .expect("record commitment");
+
+    let result = open_dispute(OpenDispute {
+        commitment_ref: "cmt_state_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    });
+    assert!(result.is_err(), "non-disputable state should be rejected");
+    assert!(result.unwrap_err().to_string().contains("not disputable"));
+}
+
+#[test]
+fn dispute_open_rejected_for_unknown_reason_code() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_reason_001");
+
+    let result = open_dispute(OpenDispute {
+        commitment_ref: "cmt_reason_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "made_up_reason",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    });
+    assert!(result.is_err(), "unknown reason code should be rejected");
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("unknown reason_code"));
+}
+
+#[test]
+fn dispute_replay_same_request_rejected() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_replay_001");
+
+    open_dispute(OpenDispute {
+        commitment_ref: "cmt_replay_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    })
+    .expect("first open");
+
+    let replay = open_dispute(OpenDispute {
+        commitment_ref: "cmt_replay_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    });
+    assert!(replay.is_err(), "replayed dispute should be rejected");
+    let message = replay.unwrap_err().to_string();
+    assert!(
+        message.contains("replay") || message.contains("open dispute already exists"),
+        "expected replay error, got: {message}"
+    );
+}
+
+#[test]
+fn dispute_resolve_rejected_for_unauthorized() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_auth_001");
+    let dispute = open_dispute(OpenDispute {
+        commitment_ref: "cmt_auth_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    })
+    .expect("open dispute");
+
+    let result = resolve_dispute(
+        &dispute.dispute_id,
+        "refunded",
+        "stranger.outsider",
+        resolution_evidence(),
+    );
+    assert!(result.is_err(), "unauthorized resolve should be rejected");
+    assert!(result.unwrap_err().to_string().contains("not authorized"));
+}
+
+#[test]
+fn dispute_resolve_allows_settlement_authority() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_settle_001");
+    let dispute = open_dispute(OpenDispute {
+        commitment_ref: "cmt_settle_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    })
+    .expect("open dispute");
+
+    let resolved = resolve_dispute(
+        &dispute.dispute_id,
+        "failed",
+        "settlement.test.service",
+        resolution_evidence(),
+    )
+    .expect("settlement authority resolve");
+    assert_eq!(resolved.status, DisputeStatus::Resolved);
+}
+
+#[test]
+fn dispute_cannot_be_reresolved() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_reres_001");
+    let dispute = open_dispute(OpenDispute {
+        commitment_ref: "cmt_reres_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: FUTURE_DEADLINE,
+    })
+    .expect("open dispute");
+    resolve_dispute(
+        &dispute.dispute_id,
+        "refunded",
+        "verifier.test",
+        resolution_evidence(),
+    )
+    .expect("first resolve");
+
+    let again = resolve_dispute(
+        &dispute.dispute_id,
+        "fulfilled",
+        "verifier.test",
+        resolution_evidence(),
+    );
+    assert!(again.is_err(), "re-resolution should be rejected");
+    assert!(again.unwrap_err().to_string().contains("already resolved"));
+}
+
+#[test]
+fn dispute_evidence_immutable_after_deadline() {
+    let _guard = StateGuard::acquire();
+    save_state(&init_state()).expect("reset state");
+    seed_commitment("cmt_deadline_001");
+    let dispute = open_dispute(OpenDispute {
+        commitment_ref: "cmt_deadline_001",
+        raised_by: "agent.test.orchestrator",
+        reason_code: "terms_mismatch",
+        statement: None,
+        evidence_refs: sample_evidence(),
+        response_deadline: PAST_DEADLINE,
+    })
+    .expect("open dispute");
+
+    let extra = EvidenceRef {
+        r#type: "late_addendum".to_string(),
+        digest: format!("sha256:{}", "d".repeat(64)),
+    };
+    let result = append_dispute_evidence(&dispute.dispute_id, extra);
+    assert!(
+        result.is_err(),
+        "evidence append after deadline should be rejected"
+    );
+    assert!(result.unwrap_err().to_string().contains("immutable"));
+
+    let stored = get_dispute(&dispute.dispute_id).expect("dispute");
+    assert_eq!(stored.evidence_refs.len(), 2, "evidence set must be frozen");
+}
+
+#[test]
+fn dispute_chain_action_requires_raw_tx() {
+    let network = NetworkDefinition {
+        chain_id: 84532,
+        rpc_url: "http://127.0.0.1:1".to_string(),
+        registry_contract: "0x0000000000000000000000000000000000000000".to_string(),
+        explorer_url: "https://example.com".to_string(),
+    };
+    let action = open_dispute_action(
+        "dsp_test",
+        "cmt_test",
+        "sha256:root",
+        "2999-01-01T00:00:00Z",
+    );
+    let result = execute_registry_action("base_sepolia", &network, &action, &None);
+    assert!(result.is_err(), "missing raw tx should fail");
+    assert!(result
+        .err()
+        .unwrap_or_default()
+        .contains("requires --raw-tx"));
 }

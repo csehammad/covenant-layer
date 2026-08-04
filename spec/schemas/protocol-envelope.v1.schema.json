@@ -21,7 +21,9 @@
         "offer",
         "acceptance",
         "evidence_record",
-        "settlement_receipt"
+        "settlement_receipt",
+        "dispute_record",
+        "dispute_resolution"
       ]
     },
     "object_version": {
@@ -94,6 +96,22 @@
       },
       "then": {
         "properties": { "payload": { "$ref": "#/$defs/settlementReceiptPayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "dispute_record" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/disputeRecordPayload" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "object_type": { "const": "dispute_resolution" } }
+      },
+      "then": {
+        "properties": { "payload": { "$ref": "#/$defs/disputeResolutionPayload" } }
       }
     }
   ],
@@ -242,6 +260,89 @@
           "type": "array",
           "items": { "type": "string" }
         }
+      },
+      "additionalProperties": true
+    },
+    "reasonCode": {
+      "type": "string",
+      "enum": [
+        "terms_mismatch",
+        "missing_evidence",
+        "late_fulfillment",
+        "duplicate_charge",
+        "non_delivery"
+      ]
+    },
+    "disputeStatus": {
+      "type": "string",
+      "enum": ["open", "investigating", "resolved", "closed"]
+    },
+    "resolutionDecision": {
+      "type": "string",
+      "enum": ["fulfilled", "failed", "refunded"]
+    },
+    "disputeEvidenceRef": {
+      "type": "object",
+      "required": ["type", "digest"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": true
+    },
+    "disputeRecordPayload": {
+      "type": "object",
+      "required": [
+        "dispute_id",
+        "commitment_ref",
+        "raised_by",
+        "reason_code",
+        "evidence_refs",
+        "opened_at",
+        "response_deadline",
+        "status"
+      ],
+      "properties": {
+        "dispute_id": { "type": "string", "minLength": 3 },
+        "commitment_ref": { "type": "string", "minLength": 3 },
+        "raised_by": { "type": "string", "minLength": 3 },
+        "reason_code": { "$ref": "#/$defs/reasonCode" },
+        "statement": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/disputeEvidenceRef" },
+          "minItems": 1
+        },
+        "opened_at": { "type": "string", "format": "date-time" },
+        "response_deadline": { "type": "string", "format": "date-time" },
+        "status": { "$ref": "#/$defs/disputeStatus" }
+      },
+      "additionalProperties": true
+    },
+    "disputeResolutionPayload": {
+      "type": "object",
+      "required": [
+        "resolution_id",
+        "dispute_id",
+        "commitment_ref",
+        "decision",
+        "resolved_by",
+        "resolution_evidence_refs",
+        "resolved_at",
+        "settlement_state"
+      ],
+      "properties": {
+        "resolution_id": { "type": "string", "minLength": 3 },
+        "dispute_id": { "type": "string", "minLength": 3 },
+        "commitment_ref": { "type": "string", "minLength": 3 },
+        "decision": { "$ref": "#/$defs/resolutionDecision" },
+        "resolved_by": { "type": "string", "minLength": 3 },
+        "resolution_evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/disputeEvidenceRef" }
+        },
+        "resolved_at": { "type": "string", "format": "date-time" },
+        "settlement_state": { "$ref": "#/$defs/resolutionDecision" }
       },
       "additionalProperties": true
     }

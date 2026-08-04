@@ -1,0 +1,32 @@
+# ---- Rust (framework) ----
+/framework/target/
+**/*.rs.bk
+
+# ---- Foundry (contracts) ----
+/framework/out/
+/framework/cache/
+/framework/broadcast/
+/framework/foundry.lock
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# ---- Runtime / local framework state ----
+/framework/state/registry.json
+
+# ---- Generated demo intermediates (produced by run_dispute_flow.py) ----
+/demo/artifacts/dispute-evidence.generated.json
+/demo/artifacts/dispute-resolution.generated.json
+
+# ---- Generated signatures ----
+/framework/provider-manifest.template.yaml.sig
+
+# ---- OS / editor cruft ----
+.DS_Store
+*.swp

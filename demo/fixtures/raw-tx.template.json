@@ -30,5 +30,25 @@
     "conformance_passed": "0xSIGNED_TX_PROVIDER_CHARLIE_CONFORMANCE_PASSED",
     "probation": "0xSIGNED_TX_PROVIDER_CHARLIE_PROBATION",
     "active": "0xSIGNED_TX_PROVIDER_CHARLIE_ACTIVE"
+  },
+  "verifier.demo.audit": {
+    "register": "0xSIGNED_REGISTER_TX_VERIFIER",
+    "identity_verified": "0xSIGNED_TX_VERIFIER_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_VERIFIER_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_VERIFIER_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_VERIFIER_PROBATION",
+    "active": "0xSIGNED_TX_VERIFIER_ACTIVE"
+  },
+  "settlement.demo.service": {
+    "register": "0xSIGNED_REGISTER_TX_SETTLEMENT",
+    "identity_verified": "0xSIGNED_TX_SETTLEMENT_IDENTITY_VERIFIED",
+    "conformance_attestation": "0xSIGNED_TX_SETTLEMENT_CONFORMANCE_ATTESTATION",
+    "conformance_passed": "0xSIGNED_TX_SETTLEMENT_CONFORMANCE_PASSED",
+    "probation": "0xSIGNED_TX_SETTLEMENT_PROBATION",
+    "active": "0xSIGNED_TX_SETTLEMENT_ACTIVE"
+  },
+  "dispute.demo": {
+    "open": "0xSIGNED_TX_DISPUTE_OPEN",
+    "resolve": "0xSIGNED_TX_DISPUTE_RESOLVE"
   }
 }

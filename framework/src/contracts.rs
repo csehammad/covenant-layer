@@ -6,6 +6,8 @@ pub enum RegistryActionKind {
     RegisterParticipant,
     TransitionParticipant,
     AddAttestation,
+    OpenDispute,
+    ResolveDispute,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -55,6 +57,38 @@ pub fn attestation_action(participant_id: &str, kind: &str) -> RegistryAction {
         participant_id: participant_id.to_string(),
         payload: json!({
             "attestation_type": kind
+        }),
+    }
+}
+
+pub fn open_dispute_action(
+    dispute_id: &str,
+    commitment_ref: &str,
+    evidence_root: &str,
+    response_deadline: &str,
+) -> RegistryAction {
+    RegistryAction {
+        kind: RegistryActionKind::OpenDispute,
+        participant_id: dispute_id.to_string(),
+        payload: json!({
+            "commitment_ref": commitment_ref,
+            "evidence_root": evidence_root,
+            "response_deadline": response_deadline
+        }),
+    }
+}
+
+pub fn resolve_dispute_action(
+    dispute_id: &str,
+    decision: &str,
+    resolution_evidence_root: &str,
+) -> RegistryAction {
+    RegistryAction {
+        kind: RegistryActionKind::ResolveDispute,
+        participant_id: dispute_id.to_string(),
+        payload: json!({
+            "decision": decision,
+            "resolution_evidence_root": resolution_evidence_root
         }),
     }
 }

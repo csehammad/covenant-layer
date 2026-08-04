@@ -6,11 +6,15 @@ This section defines how protocol versions, conformance profiles, and schema ver
 
 | Protocol core | Wire/schema | Conformance profile | Status |
 |---|---|---|---|
-| `2.x` (`02-core-protocol.md`) | `1.0` (`05-wire-integrity.md`, `schemas/protocol-envelope.v1.schema.json`) | `onboarding-v1` | required baseline |
+| `2.x` (`02-core-protocol.md`) | `1.1` (`05-wire-integrity.md`, `schemas/protocol-envelope.v1.schema.json`, `schemas/dispute-record.v1.schema.json`) | `onboarding-v1` | required baseline |
+
+Wire/schema `1.1` adds the `dispute_record` and `dispute_resolution` object
+types as backward-compatible additions over `1.0`; all `1.0` object types are
+unchanged, so `1.1` receivers interoperate with `1.0` senders.
 
 ## Compatibility rules
 
-- Patch/minor updates in `2.x` MUST remain compatible with wire/schema `1.0` and `onboarding-v1`.
+- Patch/minor updates in `2.x` MUST remain compatible with wire/schema `1.x` and `onboarding-v1`.
 - Breaking wire changes MUST increment wire/schema major version.
 - Breaking onboarding requirements MUST increment conformance profile version.
 - Implementations SHOULD advertise supported `(protocol, wire, profile)` tuples.

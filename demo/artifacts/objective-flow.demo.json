@@ -59,6 +59,8 @@
       }
     }
   ],
+  "agent_reasoning": null,
+  "selection_method": "deterministic",
   "selected_offer": {
     "offer_id": "ofr_demo_bravo_001",
     "provider_id": "provider.demo.bravo",
@@ -97,6 +99,12 @@
       "event": "offer_published",
       "ref": "env_ofr_demo_charlie_001",
       "provider_id": "provider.demo.charlie"
+    },
+    {
+      "event": "agent_reasoning_complete",
+      "selection_method": "deterministic",
+      "selected_offer_id": "ofr_demo_bravo_001",
+      "llm_model": null
     },
     {
       "event": "offer_accepted",

@@ -62,6 +62,8 @@
         }
       }
     ],
+    "agent_reasoning": null,
+    "selection_method": "deterministic",
     "selected_offer": {
       "offer_id": "ofr_demo_bravo_001",
       "provider_id": "provider.demo.bravo",
@@ -102,6 +104,12 @@
         "provider_id": "provider.demo.charlie"
       },
       {
+        "event": "agent_reasoning_complete",
+        "selection_method": "deterministic",
+        "selected_offer_id": "ofr_demo_bravo_001",
+        "llm_model": null
+      },
+      {
         "event": "offer_accepted",
         "ref": "env_acceptance_demo_001",
         "offer_id": "ofr_demo_bravo_001"
@@ -115,6 +123,215 @@
         "event": "settlement_recorded",
         "ref": "env_settlement_demo_001",
         "state": "fulfilled"
+      }
+    ]
+  },
+  "dispute_flow": {
+    "scenario": "terms_mismatch_refund",
+    "commitment": {
+      "commitment_ref": "cmt_demo_charlie_001",
+      "objective_ref": "obj_demo_flight_001",
+      "offer_id": "ofr_demo_charlie_001",
+      "accepted_by": "agent.demo.orchestrator",
+      "provider_id": "provider.demo.charlie",
+      "assigned_verifier": "verifier.demo.audit",
+      "settlement_state": "fulfilled",
+      "created_at": "2026-08-04T16:38:00.597481+00:00",
+      "updated_at": "2026-08-04T16:38:00.597481+00:00",
+      "last_tx_hash": "0x6479e7b65a70feac7151f2ebffb90a79",
+      "last_block": 1,
+      "last_source": "local",
+      "last_network": null,
+      "last_chain_id": null,
+      "last_contract": null
+    },
+    "dispute": {
+      "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+      "commitment_ref": "cmt_demo_charlie_001",
+      "raised_by": "agent.demo.orchestrator",
+      "reason_code": "terms_mismatch",
+      "statement": "Booked cabin does not match the accepted offer",
+      "evidence_refs": [
+        {
+          "type": "accepted_offer",
+          "digest": "sha256:d194c8eca5d38aad47fd3eb70d14f6aa817c15241826e68cd9fcb32d466f8b25"
+        },
+        {
+          "type": "provider_receipt",
+          "digest": "sha256:943cf88366e7870ee4d062aa706d54195f34ee3ad635ddeac8dde703cebe143b"
+        }
+      ],
+      "opened_at": "2026-08-04T16:38:01.565284+00:00",
+      "response_deadline": "2026-05-24T12:00:00Z",
+      "status": "open",
+      "updated_at": "2026-08-04T16:38:01.565284+00:00",
+      "last_tx_hash": "0x7811006ee54fa5a86a34493154be064e",
+      "last_block": 2,
+      "last_source": "local",
+      "last_network": null,
+      "last_chain_id": null,
+      "last_contract": null
+    },
+    "verifier_review": {
+      "verifier": "verifier.demo.audit",
+      "accepted_cabin": "business",
+      "delivered_cabin": "premium_economy",
+      "mismatch_detected": true,
+      "recommended_decision": "refunded"
+    },
+    "resolution": {
+      "resolution_id": "res_82f16590b3f035ba9d4137a1",
+      "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+      "commitment_ref": "cmt_demo_charlie_001",
+      "decision": "refunded",
+      "resolved_by": "verifier.demo.audit",
+      "resolution_evidence_refs": [
+        {
+          "type": "verifier_report",
+          "digest": "sha256:ef58652c3b7f3a73f7b36a1d6105944b638a3ee3c535907ee6c080ec8cdc3665"
+        }
+      ],
+      "resolved_at": "2026-08-04T16:38:02.529847+00:00",
+      "settlement_state": "refunded"
+    },
+    "settlement_state_trail": [
+      "fulfilled",
+      "disputed",
+      "refunded"
+    ],
+    "events": [
+      {
+        "event": "commitment_recorded",
+        "commitment_ref": "cmt_demo_charlie_001",
+        "settlement_state": "fulfilled"
+      },
+      {
+        "event": "evidence_recorded",
+        "provider_id": "provider.demo.charlie",
+        "evidence_type": "booking_confirmation",
+        "digest": "sha256:943cf88366e7870ee4d062aa706d54195f34ee3ad635ddeac8dde703cebe143b"
+      },
+      {
+        "event": "dispute_opened",
+        "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+        "reason_code": "terms_mismatch",
+        "raised_by": "agent.demo.orchestrator",
+        "settlement_state": "disputed"
+      },
+      {
+        "event": "verifier_review_complete",
+        "verifier": "verifier.demo.audit",
+        "mismatch_detected": true,
+        "recommended_decision": "refunded"
+      },
+      {
+        "event": "dispute_resolved",
+        "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+        "decision": "refunded",
+        "resolved_by": "verifier.demo.audit",
+        "settlement_state": "refunded"
+      },
+      {
+        "event": "settlement_recorded",
+        "commitment_ref": "cmt_demo_charlie_001",
+        "state": "refunded"
+      }
+    ],
+    "envelopes": [
+      {
+        "object_type": "dispute_record",
+        "object_version": "1.0",
+        "object_id": "env_dsp_5f99d850a430230cb72c4c84",
+        "issued_at": "2026-08-04T16:38:02Z",
+        "issuer_id": "agent.demo.orchestrator",
+        "payload": {
+          "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+          "commitment_ref": "cmt_demo_charlie_001",
+          "raised_by": "agent.demo.orchestrator",
+          "reason_code": "terms_mismatch",
+          "statement": "Booked cabin does not match the accepted offer",
+          "evidence_refs": [
+            {
+              "type": "accepted_offer",
+              "digest": "sha256:d194c8eca5d38aad47fd3eb70d14f6aa817c15241826e68cd9fcb32d466f8b25"
+            },
+            {
+              "type": "provider_receipt",
+              "digest": "sha256:943cf88366e7870ee4d062aa706d54195f34ee3ad635ddeac8dde703cebe143b"
+            }
+          ],
+          "opened_at": "2026-08-04T16:38:01.565284+00:00",
+          "response_deadline": "2026-05-24T12:00:00Z",
+          "status": "resolved"
+        },
+        "integrity": {
+          "canonicalization": "jcs-rfc8785",
+          "hash_alg": "sha256",
+          "hash": "sha256:11c45dddd4a018aad3f5068e59a0fbedf120cbdcb080c9cb2f4489c31cf14b75",
+          "signature": {
+            "alg": "Ed25519",
+            "kid": "agent-demo-ed25519-2026-q1",
+            "value": "yUwwQIyPH3D_fFcJ18izM0iXlVdTRk4Q9P1KWbQPNyQ="
+          }
+        }
+      },
+      {
+        "object_type": "dispute_resolution",
+        "object_version": "1.0",
+        "object_id": "env_res_82f16590b3f035ba9d4137a1",
+        "issued_at": "2026-08-04T16:38:02Z",
+        "issuer_id": "verifier.demo.audit",
+        "payload": {
+          "resolution_id": "res_82f16590b3f035ba9d4137a1",
+          "dispute_id": "dsp_5f99d850a430230cb72c4c84",
+          "commitment_ref": "cmt_demo_charlie_001",
+          "decision": "refunded",
+          "resolved_by": "verifier.demo.audit",
+          "resolution_evidence_refs": [
+            {
+              "type": "verifier_report",
+              "digest": "sha256:ef58652c3b7f3a73f7b36a1d6105944b638a3ee3c535907ee6c080ec8cdc3665"
+            }
+          ],
+          "resolved_at": "2026-08-04T16:38:02.529847+00:00",
+          "settlement_state": "refunded"
+        },
+        "integrity": {
+          "canonicalization": "jcs-rfc8785",
+          "hash_alg": "sha256",
+          "hash": "sha256:f8c892abded58d06d680715802c00e472c96462431d46394a7e347bdb1065fa2",
+          "signature": {
+            "alg": "Ed25519",
+            "kid": "verifier-demo-ed25519-2026-q1",
+            "value": "-B34ccAWurTwjWq23L30iN7HRTeXUWL4Hh_h9G1bzvU="
+          }
+        }
+      },
+      {
+        "object_type": "settlement_receipt",
+        "object_version": "1.0",
+        "object_id": "env_settlement_dispute_demo_001",
+        "issued_at": "2026-08-04T16:38:02Z",
+        "issuer_id": "settlement.demo.service",
+        "payload": {
+          "receipt_id": "set_demo_dispute_001",
+          "commitment_ref": "cmt_demo_charlie_001",
+          "state": "refunded",
+          "recorded_at": "2026-08-04T16:38:02Z",
+          "evidence_refs": [
+            "res_82f16590b3f035ba9d4137a1"
+          ]
+        },
+        "integrity": {
+          "canonicalization": "jcs-rfc8785",
+          "hash_alg": "sha256",
+          "hash": "sha256:690d8ad451c466b3c8d86de56b7a7bde81a606b46136340fc9a1aa5c89c71e3e",
+          "signature": {
+            "alg": "Ed25519",
+            "kid": "settlement-demo-ed25519-2026-q1",
+            "value": "HPdr5B09iqCd-9-l2pzg8fPFiMSVNzjqS6AMUQCODhU="
+          }
+        }
       }
     ]
   }

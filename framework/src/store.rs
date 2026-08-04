@@ -21,6 +21,8 @@ pub fn init_state() -> RegistryState {
         },
         participants: Default::default(),
         events: vec![],
+        commitments: Default::default(),
+        disputes: Default::default(),
     }
 }
 

@@ -4,7 +4,7 @@
       "object_type": "objective",
       "object_version": "1.0",
       "object_id": "env_objective_demo_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "agent.demo.orchestrator",
       "payload": {
         "objective_id": "obj_demo_flight_001",
@@ -37,7 +37,7 @@
       "object_type": "offer",
       "object_version": "1.0",
       "object_id": "env_ofr_demo_alpha_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "provider.demo.alpha",
       "payload": {
         "offer_id": "ofr_demo_alpha_001",
@@ -71,7 +71,7 @@
       "object_type": "offer",
       "object_version": "1.0",
       "object_id": "env_ofr_demo_bravo_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "provider.demo.bravo",
       "payload": {
         "offer_id": "ofr_demo_bravo_001",
@@ -105,7 +105,7 @@
       "object_type": "offer",
       "object_version": "1.0",
       "object_id": "env_ofr_demo_charlie_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "provider.demo.charlie",
       "payload": {
         "offer_id": "ofr_demo_charlie_001",
@@ -139,19 +139,19 @@
       "object_type": "acceptance",
       "object_version": "1.0",
       "object_id": "env_acceptance_demo_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "agent.demo.orchestrator",
       "payload": {
         "acceptance_id": "acc_demo_001",
         "offer_id": "ofr_demo_bravo_001",
         "accepted_by": "agent.demo.orchestrator",
-        "accepted_at": "2026-03-12T21:18:37Z",
+        "accepted_at": "2026-08-04T16:37:57Z",
         "approval_ref": "approval_demo_001"
       },
       "integrity": {
         "canonicalization": "jcs-rfc8785",
         "hash_alg": "sha256",
-        "hash": "sha256:228566271b4159f3ac3487b089e06e3828431f1274bb570568e52b7448b27821",
+        "hash": "sha256:8b9ae58e503ddc0fff5efc5413cc0d464e728401074099a146fbfc68909fed00",
         "signature": {
           "alg": "Ed25519",
           "kid": "agent-demo-ed25519-2026-q1",
@@ -163,7 +163,7 @@
       "object_type": "evidence_record",
       "object_version": "1.0",
       "object_id": "env_evidence_demo_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "provider.demo.bravo",
       "payload": {
         "evidence_id": "evd_demo_001",
@@ -171,12 +171,12 @@
         "submitted_by": "provider.demo.bravo",
         "evidence_type": "booking_confirmation",
         "evidence_ref": "urn:demo:evidence:booking_confirmation:001",
-        "submitted_at": "2026-03-12T21:18:37Z"
+        "submitted_at": "2026-08-04T16:37:57Z"
       },
       "integrity": {
         "canonicalization": "jcs-rfc8785",
         "hash_alg": "sha256",
-        "hash": "sha256:1b04de876edd5ff3c1aeddeb2e086df281f2748445d7ad6618cccd0747c4da29",
+        "hash": "sha256:00256d67a413ca885b596b11c1740fc8e3165fec288793efa6567a67c208e190",
         "signature": {
           "alg": "Ed25519",
           "kid": "provider-demo-bravo-kid",
@@ -188,13 +188,13 @@
       "object_type": "settlement_receipt",
       "object_version": "1.0",
       "object_id": "env_settlement_demo_001",
-      "issued_at": "2026-03-12T21:18:37Z",
+      "issued_at": "2026-08-04T16:37:57Z",
       "issuer_id": "settlement.demo.service",
       "payload": {
         "receipt_id": "set_demo_001",
         "commitment_ref": "acc_demo_001",
         "state": "fulfilled",
-        "recorded_at": "2026-03-12T21:18:37Z",
+        "recorded_at": "2026-08-04T16:37:57Z",
         "evidence_refs": [
           "evd_demo_001"
         ]
@@ -202,7 +202,7 @@
       "integrity": {
         "canonicalization": "jcs-rfc8785",
         "hash_alg": "sha256",
-        "hash": "sha256:2426a0b4037ffbbb8b8a774f25735bcba22a92c786f2bf5e72109045f1ccfdaf",
+        "hash": "sha256:fad7ba5255621dbb3fc457360bd1870772d96eda5ae8b1e60ac0f9ecdc94dda2",
         "signature": {
           "alg": "Ed25519",
           "kid": "settlement-demo-ed25519-2026-q1",

@@ -1,0 +1,2 @@
+# Test dependencies for the demo Python test suite.
+jsonschema>=4.18,<5

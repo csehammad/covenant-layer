@@ -67,8 +67,33 @@ A dispute record MUST include:
 - `raised_by`
 - `reason_code`
 - `opened_at`
+- `response_deadline`
 - `evidence_refs`
 - `status`
+
+A dispute record MAY include:
+
+- `statement` — supplementary free-text context
+
+The `statement` field is supplementary only. Settlement logic MUST NOT depend
+on interpreting prose; machine decisions MUST be driven by `reason_code`,
+`evidence_refs`, and recorded settlement state.
+
+The canonical wire schema for dispute records and resolutions is
+`schemas/dispute-record.v1.schema.json`, transported using the standard
+protocol envelope (`object_type: dispute_record` and
+`object_type: dispute_resolution`).
+
+### Reason codes
+
+`reason_code` MUST be drawn from a fixed, network-published set. The baseline
+set is:
+
+- `terms_mismatch` — delivered outcome does not match the accepted offer
+- `missing_evidence` — required fulfillment evidence was not submitted
+- `late_fulfillment` — fulfillment occurred after the valid window
+- `duplicate_charge` — the commitment was charged/settled more than once
+- `non_delivery` — no fulfillment occurred
 
 ### Dispute statuses
 
@@ -79,14 +104,29 @@ Minimum statuses:
 - `resolved`
 - `closed`
 
+### Evidence immutability
+
+- `evidence_refs` attached to a dispute MUST be treated as immutable after the
+  `response_deadline` has passed.
+- Attempts to append or alter dispute evidence after the deadline MUST be
+  rejected.
+
+### Authorization
+
+- Only a party to the accepted commitment MAY open a dispute for that
+  commitment.
+- Only the assigned verifier or the settlement authority MAY resolve a dispute.
+- A resolved dispute MUST NOT be reopened under the same `dispute_id`.
+- A duplicate `dispute_id` MUST be treated as replay and rejected.
+
 ### Resolution requirements
 
 Dispute resolution MUST produce:
 
-- a resolution decision
-- linked supporting evidence
+- a resolution decision (`fulfilled`, `failed`, or `refunded`)
+- linked supporting evidence (`resolution_evidence_refs`)
 - final settlement state transition (`fulfilled`, `failed`, or `refunded`)
-- decision timestamp and responsible authority/service
+- decision timestamp and responsible authority/service (`resolved_by`)
 
 Unresolved open disputes SHOULD block normal routing for affected commitments according to network policy.
 

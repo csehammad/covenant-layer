@@ -194,6 +194,8 @@ A chain-only E2E demo implements the full lifecycle in a travel vertical (JFK to
 | `provider.demo.alpha` | Provider with nonstop offer and short hold window |
 | `provider.demo.bravo` | Provider with lower price and stronger refund terms |
 | `provider.demo.charlie` | Provider with business-class option and tighter change policy |
+| `verifier.demo.audit` | Verifier that reviews evidence and resolves disputes |
+| `settlement.demo.service` | Settlement service that records final settlement state |
 
 What the demo runs:
 
@@ -203,7 +205,24 @@ What the demo runs:
 4. Lets the agent reason over the tradeoffs using a reasoning model or deterministic fallback
 5. Accepts the winning offer
 6. Records evidence and settlement
-7. Produces a combined artifact and HTML timeline visualization
+7. Runs a terms-mismatch dispute that resolves to `refunded` (v0.2.0 dispute lifecycle)
+8. Produces a combined artifact and HTML timeline visualization
+
+### Dispute lifecycle (v0.2.0)
+
+The demo includes the repository's first non-happy-path. Provider Charlie
+offers business class but submits fulfillment evidence for premium economy. The
+agent opens a `terms_mismatch` dispute, the verifier compares the accepted offer
+with the booking receipt, and the settlement service records `refunded`. The
+timeline shows the dispute, evidence digests, and resolution. Full evidence
+stays off-chain; only digests and lifecycle transitions are anchored on-chain.
+
+This flow runs fully offline:
+
+```bash
+python3 demo/scripts/run_dispute_flow.py
+python3 demo/scripts/validate_dispute.py   # expects DISPUTE_VALIDATION_OK
+```
 
 Run it:
 
@@ -248,7 +267,7 @@ See [`demo/README.md`](demo/README.md) for full details and the [`dry-run checkl
 **Repository layout:**
 
 ```text
-spec/            protocol spec (8 chapters + JSON schema)
+spec/            protocol spec (8 chapters + JSON schemas: envelope + dispute record)
 framework/       Rust CLI + Solidity contracts (Foundry)
 demo/            chain-only E2E demo (scripts, manifests, fixtures, artifacts)
 docs/            architecture, network model, security rationale

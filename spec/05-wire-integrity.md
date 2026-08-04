@@ -5,6 +5,7 @@ This section defines implementation requirements needed for interoperable protoc
 Reference JSON Schema:
 
 - `schemas/protocol-envelope.v1.schema.json`
+- `schemas/dispute-record.v1.schema.json`
 
 ## Normative language
 
@@ -76,8 +77,17 @@ Minimum payload fields:
 - **Acceptance:** `acceptance_id`, `offer_id`, `accepted_by`, `accepted_at`, `approval_ref` (if required)
 - **Evidence Record:** `evidence_id`, `commitment_ref`, `submitted_by`, `evidence_type`, `evidence_ref`, `submitted_at`
 - **Settlement Receipt:** `receipt_id`, `commitment_ref`, `state`, `recorded_at`, `evidence_refs`
+- **Dispute Record:** `dispute_id`, `commitment_ref`, `raised_by`, `reason_code`, `opened_at`, `response_deadline`, `evidence_refs`, `status`
+- **Dispute Resolution:** `resolution_id`, `dispute_id`, `commitment_ref`, `decision`, `resolved_by`, `resolution_evidence_refs`, `resolved_at`, `settlement_state`
 
 Objects missing required fields MUST be invalid.
+
+## Wire version baseline
+
+The wire/schema baseline is `1.1`. The `dispute_record` and
+`dispute_resolution` object types were added as backward-compatible additions
+over the `1.0` baseline (existing object types are unchanged), consistent with
+the object version policy above.
 
 ## Idempotency and replay protection
 

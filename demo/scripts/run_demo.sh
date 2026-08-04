@@ -10,6 +10,9 @@ python3 "${SCRIPT_DIR}/run_chain_onboarding.py"
 echo "==> Running objective/offer/acceptance flow"
 python3 "${SCRIPT_DIR}/run_objective_flow.py"
 
+echo "==> Running terms-mismatch dispute + refund flow"
+python3 "${SCRIPT_DIR}/run_dispute_flow.py"
+
 echo "==> Building combined demo artifact"
 python3 "${SCRIPT_DIR}/build_demo_artifact.py"
 

@@ -1,0 +1,47 @@
+{
+  "scenario": "terms_mismatch_refund",
+  "commitment": {
+    "commitment_ref": "cmt_demo_charlie_001",
+    "objective_ref": "obj_demo_flight_001",
+    "offer_id": "ofr_demo_charlie_001",
+    "accepted_by": "agent.demo.orchestrator",
+    "provider_id": "provider.demo.charlie",
+    "assigned_verifier": "verifier.demo.audit",
+    "settlement_authority": "settlement.demo.service",
+    "settlement_state": "fulfilled"
+  },
+  "accepted_offer": {
+    "offer_id": "ofr_demo_charlie_001",
+    "provider_id": "provider.demo.charlie",
+    "objective_id": "obj_demo_flight_001",
+    "terms": {
+      "price_usd": 2480,
+      "stops": 1,
+      "overnight_layover": false,
+      "cabin": "business",
+      "refund_flexibility_score": 0.55,
+      "hold_minutes": 22
+    }
+  },
+  "provider_receipt": {
+    "evidence_type": "booking_confirmation",
+    "provider_id": "provider.demo.charlie",
+    "booking_reference": "CHRLY-8842",
+    "delivered_terms": {
+      "price_usd": 2480,
+      "stops": 1,
+      "overnight_layover": false,
+      "cabin": "premium_economy"
+    }
+  },
+  "dispute": {
+    "raised_by": "agent.demo.orchestrator",
+    "reason_code": "terms_mismatch",
+    "statement": "Booked cabin does not match the accepted offer",
+    "response_deadline": "2026-05-24T12:00:00Z"
+  },
+  "expected_resolution": {
+    "decision": "refunded",
+    "resolved_by": "verifier.demo.audit"
+  }
+}

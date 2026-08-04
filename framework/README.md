@@ -58,6 +58,47 @@ cargo run -- status --source chain --network base_sepolia
 cargo run -- status --source chain --network base_sepolia --participant-id provider.example.travel
 ```
 
+### Dispute lifecycle (v0.2.0)
+
+Open and resolve disputes over accepted commitments in local or chain mode.
+Full evidence stays off-chain; only digests and lifecycle transitions are
+anchored on-chain. See [`runbook-dispute.md`](runbook-dispute.md) for details.
+
+```bash
+# Seed an accepted commitment (source of truth for enforcement)
+cargo run -- commitment-record \
+  --commitment-id cmt_01... \
+  --accepted-by agent.example \
+  --provider-id provider.example \
+  --assigned-verifier verifier.example \
+  --settlement-authority settlement.example \
+  --settlement-state fulfilled
+
+# Open a dispute (evidence file lists {type, digest} references)
+cargo run -- dispute-open \
+  --commitment-id cmt_01... \
+  --reason terms_mismatch \
+  --evidence dispute-evidence.json \
+  --raised-by agent.example \
+  --response-deadline 2026-08-06T12:00:00Z
+
+cargo run -- dispute-status --dispute-id dsp_01...
+
+# Resolve (assigned verifier or settlement authority only)
+cargo run -- dispute-resolve \
+  --dispute-id dsp_01... \
+  --decision refunded \
+  --resolution resolution.json \
+  --resolved-by verifier.example
+```
+
+Enforced invariants: only a party to the commitment can open; the commitment
+must be in a disputable state; the same dispute request cannot be replayed;
+evidence is immutable after the response deadline; only the assigned verifier or
+settlement authority can resolve; a resolved dispute cannot be reopened. Fixed
+reason codes: `terms_mismatch`, `missing_evidence`, `late_fulfillment`,
+`duplicate_charge`, `non_delivery`.
+
 ### Validation suite
 
 ```bash
@@ -95,9 +136,12 @@ forge test
 - `networks.yaml` - supported network definitions
 - `registry-contract-interface.md` - EVM contract interface and events
 - `contracts/ProviderRegistry.sol` - reference on-chain registry contract
+- `contracts/DisputeRegistry.sol` - reference on-chain dispute registry contract
 - `foundry.toml` - Foundry project configuration
 - `script/DeployProviderRegistry.s.sol` - Foundry deployment script
+- `script/DeployDisputeRegistry.s.sol` - Foundry dispute registry deployment script
 - `scripts/deploy_registry.sh` - shell helper for deployment
+- `runbook-dispute.md` - dispute open/resolve runbook (local + chain)
 - `runbook-deployer.md` - contract deployment and ownership runbook
 - `governance-model.md` - ownership and upgrade control model
 - `runbook-provider.md` - provider self-registration runbook
